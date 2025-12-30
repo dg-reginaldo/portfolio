@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Douglas Reginaldo | Portfolio Videográfico</title>
+    <style>
+        /* --- RESET & VARIÁVEIS --- */
+        :root {
+            --bg-color: #FAFAFA;
+            --text-color: #1A1A1A;
+            --accent-color: #707070;
+            --dark-section: #0F0F0F; /* Fundo escuro para a sessão vertical */
+            --white: #FFFFFF;
+            --font-main: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --spacing-unit: 80px;
+            --vertical-card-width: 320px;
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed; top: 0; width: 100%; display: flex;
+            justify-content: space-between; align-items: center;
+            padding: 15px 5%;
+            z-index: 1000;
+            background: rgba(250, 250, 250, 0.85);
+            backdrop-filter: blur(15px); 
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .logo { font-weight: 800; font-size: 1.1rem; letter-spacing: -0.5px; text-transform: uppercase; }
+        .profile-pic { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; filter: grayscale(10%); }
+
+        nav ul { display: flex; list-style: none; gap: 30px; }
+        nav a { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; opacity: 0.7; }
+        nav a:hover { opacity: 1; }
+
+        section { padding: var(--spacing-unit) 5%; max-width: 1450px; margin: 0 auto; }
+        .section-title { font-size: 0.75rem; color: var(--accent-color); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 30px; font-weight: 700; }
+
+        /* --- HERO & BENTO GRID --- */
+        #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 100px; }
+        .hero-info { margin-bottom: 40px; }
+        .hero-title { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; letter-spacing: -2px; line-height: 0.9; margin-bottom: 15px; }
+        .hero-subtitle { font-size: 1.1rem; color: var(--accent-color); font-weight: 400; text-transform: uppercase; letter-spacing: 2px; }
+
+        .photo-mosaic { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 300px); gap: 15px; width: 100%; }
+        .mosaic-item { position: relative; overflow: hidden; border-radius: var(--radius); background: #eee; }
+        .mosaic-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s ease; }
+        .mosaic-item:hover img { transform: scale(1.08); }
+
+        .item-1 { grid-column: 1 / 3; grid-row: 1 / 3; }
+        .item-2 { grid-column: 3 / 4; grid-row: 1 / 2; }
+        .item-3 { grid-column: 4 / 5; grid-row: 1 / 2; }
+        .item-4 { grid-column: 3 / 4; grid-row: 2 / 3; }
+        .item-5 { grid-column: 4 / 5; grid-row: 2 / 3; }
+
+        /* --- SEÇÃO VERTICAL (DARK) --- */
+        #vertical-work { 
+            background-color: var(--dark-section); 
+            max-width: none; 
+            padding-left: 0; padding-right: 0;
+            color: var(--white);
+        }
+        #vertical-work .section-title { padding-left: 5%; color: #888; }
+
+        .vertical-wrap { width: 100%; overflow: hidden; }
+        .vertical-scroller {
+            display: flex; gap: 20px; padding: 20px 5%;
+            overflow-x: scroll; scroll-snap-type: x mandatory;
+            cursor: grab;
+            /* Esconder barra de rolagem */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .vertical-scroller::-webkit-scrollbar { display: none; } /* Chrome, Safari and Opera */
+        .vertical-scroller.active { cursor: grabbing; scroll-snap-type: none; }
+        
+        .vertical-card {
+            flex: 0 0 auto; width: var(--vertical-card-width); aspect-ratio: 9 / 16; 
+            border-radius: var(--radius); scroll-snap-align: start;
+        }
+
+        /* --- CARDS BASE --- */
+        .project-card-base { position: relative; cursor: pointer; overflow: hidden; background-color: #222; border-radius: var(--radius); }
+        .card-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0.9; }
+        .card-overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            display: flex; flex-direction: column; justify-content: flex-end; 
+            opacity: 0; transition: all 0.4s ease; color: var(--white); padding: 25px; 
+        }
+        .project-card-base:hover .card-overlay { opacity: 1; }
+        .project-card-base:hover .card-image { transform: scale(1.05); opacity: 1; }
+        .project-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+        .project-cat { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.7; }
+
+        .grid-horizontal { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .horizontal-card { aspect-ratio: 16 / 9; }
+
+        /* --- ABOUT & CONTACT --- */
+        #about-contact { border-top: 1px solid rgba(0,0,0,0.05); display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; padding-top: 100px; }
+        .bio-text { color: #444; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6; }
+        .contact-list p { margin-bottom: 12px; font-size: 1rem; font-weight: 500; }
+        .contact-link { border-bottom: 1px solid #ddd; padding-bottom: 2px; }
+        .contact-link:hover { border-bottom: 1px solid var(--text-color); }
+
+        footer { text-align: center; padding: 60px 0; font-size: 0.7rem; color: #bbb; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- MODAL --- */
+        #video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.98); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { width: 90%; max-width: 1100px; aspect-ratio: 16/9; position: relative; }
+        .close-modal { position: absolute; top: -50px; right: 0; color: #fff; font-size: 2.5rem; cursor: pointer; }
+        .iframe-container { width: 100%; height: 100%; background: #000; border-radius: 8px; overflow: hidden; }
+        .iframe-container iframe { width: 100%; height: 100%; border: 0; }
+        #video-modal.vertical .modal-content { width: min(480px, 90%); aspect-ratio: 9/16; }
+
+        @media (max-width: 900px) {
+            .photo-mosaic { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 220px); }
+            .item-1 { grid-column: 1 / 3; grid-row: 1 / 2; }
+            #about-contact { grid-template-columns: 1fr; gap: 40px; }
+            .grid-horizontal { grid-template-columns: 1fr; }
+            .hero-title { font-size: 3.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="header">
+        <div class="header-left">
+            <div class="logo">Douglas Reginaldo</div>
+            <img src="assets/img/portfolio.JPG" alt="Profile" class="profile-pic">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#work">Projetos</a></li>
+                <li><a href="#vertical-work">Social</a></li>
+                <li><a href="#about-contact">Sobre</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <div class="hero-info">
+            <p class="hero-subtitle">Filmmaker & Editor</p>
+            <h1 class="hero-title">DOUGLAS<br>REGINALDO.</h1>
+        </div>
+
+        <div class="photo-mosaic">
+            <div class="mosaic-item item-1">
+                <img src="assets/img/hero-1.jpg" alt="Foto 1">
+            </div>
+            <div class="mosaic-item item-2">
+                <img src="assets/img/hero-2.jpg" alt="Foto 2">
+            </div>
+            <div class="mosaic-item item-3">
+                <img src="assets/img/hero-3.jpg" alt="Foto 3">
+            </div>
+            <div class="mosaic-item item-4">
+                <img src="assets/img/hero-4.jpg" alt="Foto 4">
+            </div>
+            <div class="mosaic-item item-5">
+                <img src="assets/img/hero-5.jpg" alt="Foto 5">
+            </div>
+        </div>
+    </section>
+
+    <section id="vertical-work">
+        <h3 class="section-title">Social Content (Reels)</h3>
+        <div class="vertical-wrap">
+            <div class="vertical-scroller" id="v-scroller">
+                <div class="project-card-base vertical-card" data-video="wr0PMHcdekk" onclick="openModal('Elizabeth','9:16', this.dataset.video)">
+                    <img src="" alt="M. Elizabeth" class="card-image">
+                    <div class="card-overlay">
+                        <div class="project-name">M. Elizabeth</div>
+                        <div class="project-cat">Social Reel</div>
+                    </div>
+                </div>
+                <div class="project-card-base vertical-card" data-video="nrGXhN05nHE" onclick="openModal('Catedral','9:16', this.dataset.video)">
+                    <img src="" alt="Catedral" class="card-image">
+                    <div class="card-overlay">
+                        <div class="project-name">Catedral Rock Bar</div>
+                        <div class="project-cat">Branding</div>
+                    </div>
+                </div>
+                <div class="project-card-base vertical-card" data-video="TpVFJoTYsj0" onclick="openModal('Contar','9:16', this.dataset.video)">
+                    <img src="" alt="Contar" class="card-image">
+                    <div class="card-overlay">
+                        <div class="project-name">Deixa Eu Te Contar</div>
+                        <div class="project-cat">Storytelling</div>
+                    </div>
+                </div>
+                <div class="project-card-base vertical-card" data-video="mBD3gsZY5P4" onclick="openModal('Ultra','9:16', this.dataset.video)">
+                    <img src="" alt="Ultra" class="card-image">
+                    <div class="card-overlay">
+                        <div class="project-name">Ultra Spinning</div>
+                        <div class="project-cat">Fitness</div>
+                    </div>
+                </div>
+                <div class="project-card-base vertical-card" data-video="oyAyES6vd0E" onclick="openModal('AMA','9:16', this.dataset.video)">
+                    <img src="" alt="AMA" class="card-image">
+                    <div class="card-overlay">
+                        <div class="project-name">Agência AMA</div>
+                        <div class="project-cat">VFX + IA</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="work">
+        <h3 class="section-title">Film Projects (16:9)</h3>
+        <div class="grid-horizontal">
+            <div class="project-card-base horizontal-card" data-video="f15Z8sI_2-E" onclick="openModal('Amplace','16:9', this.dataset.video)">
+                <img src="" alt="Amplace" class="card-image">
+                <div class="card-overlay">
+                    <div class="project-name">Amplace</div>
+                    <div class="project-cat">Edição - Instagram</div>
+                </div>
+            </div>
+            <div class="project-card-base horizontal-card" data-video="xaRGj6HgppQ" onclick="openModal('Stevan','16:9', this.dataset.video)">
+                <img src="" alt="Stevan" class="card-image">
+                <div class="card-overlay">
+                    <div class="project-name">Stevan - Icarus</div>
+                    <div class="project-cat">Captação - Videoclipe</div>
+                </div>
+            </div>
+            <div class="project-card-base horizontal-card" data-video="22439234" data-platform="vimeo" onclick="openModal('Amplace AMA','16:9', this.dataset.video, 'vimeo')">
+                <img src="" alt="Amplace AMA" class="card-image">
+                <div class="card-overlay">
+                    <div class="project-name">Amplace - AMA</div>
+                    <div class="project-cat">Edição - Reels</div>
+                </div>
+            </div>
+            <div class="project-card-base horizontal-card" data-video="7_S0DaYMVo4" onclick="openModal('Retro','16:9', this.dataset.video)">
+                <img src="" alt="Retrospectiva" class="card-image">
+                <div class="card-overlay">
+                    <div class="project-name">Retrospectiva PMTL</div>
+                    <div class="project-cat">Edição Corporativa</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about-contact">
+        <div class="about-block">
+            <h3 class="section-title">Sobre</h3>
+            <p class="bio-text">
+                Filmmaker e editor focado em narrativas visuais autênticas. 
+                Acredito que a técnica deve servir à história. Com 7 anos de experiência 
+                e um trabalho diversificado, minha missão é entregar o vídeo que você precisa.
+            </p>
+        </div>
+        <div class="contact-block">
+            <h3 class="section-title">Contato</h3>
+            <div class="contact-list">
+                <p><a href="mailto:douglas.jreginaldo@gmail.com" class="contact-link">douglas.jreginaldo@gmail.com</a></p>
+                <p><a href="https://instagram.com/dg.reginaldo" target="_blank" class="contact-link">@dg.reginaldo</a></p>
+                <p><a href="https://www.youtube.com/@douguk2" target="_blank" class="contact-link">Youtube</a></p>
+            </div>
+        </div>
+    </section>
+
+    <footer>&copy; 2025 Douglas Reginaldo. Minimalist Portfolio.</footer>
+
+    <div id="video-modal">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeModal()">&times;</div>
+            <div class="iframe-container" id="iframe-content"></div>
+        </div>
+    </div>
+
+    <script>
+        const GLOBAL_BACKUP = 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1200&auto=format&fit=crop';
+
+        // Melhor detecção e Thumbnails em Alta Qualidade
+        async function setAllThumbnails() {
+            const cards = document.querySelectorAll('.project-card-base');
+            for (const card of cards) {
+                const img = card.querySelector('.card-image');
+                const videoId = card.dataset.video;
+                const isVimeo = card.dataset.platform === 'vimeo';
+
+                if (img) {
+                    if (isVimeo) {
+                        // Thumbnail do Vimeo via API
+                        try {
+                            const response = await fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${videoId}`);
+                            const data = await response.json();
+                            img.src = data.thumbnail_url_with_play_button.replace('640', '1280') || data.thumbnail_url;
+                        } catch(e) { img.src = GLOBAL_BACKUP; }
+                    } else {
+                        // YouTube HD Thumbnail (maxresdefault)
+                        const hdUrl = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+                        const sdUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+                        
+                        // Tenta carregar a HD, se falhar usa a SD
+                        const tempImg = new Image();
+                        tempImg.onload = () => {
+                            if (tempImg.width <= 120) img.src = sdUrl; // YouTube retorna imagem de 120px se não existir HD
+                            else img.src = hdUrl;
+                        };
+                        tempImg.onerror = () => img.src = sdUrl;
+                        tempImg.src = hdUrl;
+                    }
+                }
+            }
+        }
+
+        function openModal(name, ratio, videoId, platform = 'youtube') {
+            const modal = document.getElementById('video-modal');
+            const container = document.getElementById('iframe-content');
+            if (ratio === '9:16') modal.classList.add('vertical'); else modal.classList.remove('vertical');
+
+            let url = '';
+            if (platform === 'vimeo') {
+                url = `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+            } else {
+                url = `https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0`;
+            }
+
+            container.innerHTML = `<iframe src="${url}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('video-modal').style.display = 'none';
+            document.getElementById('iframe-content').innerHTML = '';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Drag to Scroll - Sem barra
+        const slider = document.getElementById('v-scroller');
+        let isDown = false, startX, scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true; slider.classList.add('active');
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => { isDown = false; slider.classList.remove('active'); });
+        slider.addEventListener('mouseup', () => { isDown = false; slider.classList.remove('active'); });
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2.5; // Velocidade do arraste
+            slider.scrollLeft = scrollLeft - walk;
+        });
+
+        // Efeito de Header no Scroll
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const header = document.getElementById('header');
+            if (currentScroll > lastScroll && currentScroll > 100) header.style.transform = 'translateY(-100%)';
+            else header.style.transform = 'translateY(0)';
+            lastScroll = currentScroll;
+        });
+
+        document.addEventListener('DOMContentLoaded', setAllThumbnails);
+        document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+    </script>
+</body>
+</html>
