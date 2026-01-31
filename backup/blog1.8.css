@@ -1,0 +1,468 @@
+/* ==========================================================================
+   VARIAVEIS E RESET (VERSÃO 2.0)
+   ========================================================================== */
+:root {
+    --bg-color: #1A237E;      /* Azul Institucional */
+    --primary: #FF9800;       /* Laranja Ação */
+    --secondary: #000000;     /* Preto Absoluto */
+    --text-main: #FFFFFF;     /* Branco */
+    --terminal-green: #00ff41; /* Verde Terminal (Matrix/Retro) */
+    
+    --font-display: 'Iceberg', cursive; 
+    --font-mono: 'Space Mono', monospace;
+    
+    --border-thick: 4px solid var(--secondary);
+    --shadow-hard: 8px 8px 0px var(--primary);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: var(--bg-color);
+    background-image: 
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 3px, 3px 100%;
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+a { text-decoration: none; color: inherit; transition: 0.2s; }
+ul { list-style: none; }
+
+/* ==========================================================================
+   CABEÇALHO (HEADER) - VERSÃO VERTICAL BRUTALISTA
+   ========================================================================== */
+.header {
+    background: var(--bg-color);
+    /* Borda inferior grossa para separar do Ticker */
+    border-bottom: 8px solid var(--secondary); 
+    padding: 60px 20px;
+    position: relative;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; /* Alinha navegação à base do logo gigante */
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+/* LOGO ESTILO POSTER (COLUNAS DUPLAS) */
+.logo-text {
+    /* Estrutura Flex para criar colunas lado a lado */
+    display: flex;
+    gap: 20px; /* Espaço entre a coluna do "TERCEIRO" e do "SETOR" */
+    align-items: flex-end; /* Alinha as colunas pelo topo */
+    
+    font-family: var(--font-display);
+    font-size: 5rem;
+    line-height: 0.85;
+    font-weight: 700;
+    color: var(--bg-color);
+    
+    text-transform: uppercase;
+    width: fit-content; 
+    word-break: normal;
+    text-align: left;
+
+    /* A Sombra Laranja Solida */
+    text-shadow: 
+        4px 4px 0px var(--primary),
+        8px 8px 0px var(--primary),
+        12px 12px 0px var(--primary),
+        16px 16px 0px var(--secondary);
+        
+    transition: transform 0.2s ease;
+}
+
+/* Animação Glitch no Hover */
+.logo-text:hover {
+    transform: translate(-4px, -4px);
+    text-shadow: 
+        6px 6px 0px var(--primary),
+        12px 12px 0px var(--secondary),
+        18px 18px 0px var(--primary);
+}
+
+/* NAVEGAÇÃO */
+nav ul { display: flex; gap: 20px; align-items: center; }
+
+nav a {
+    color: var(--text-main);
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 5px 10px;
+}
+
+nav a:hover {
+    background: var(--primary);
+    color: var(--secondary);
+}
+
+/* ==========================================================================
+   BOTÃO CHARTS (ESTILO TERMINAL DE DADOS)
+   ========================================================================== */
+/* Diferenciação Visual: Removemos o estilo "bloco" e criamos um "monitor" */
+nav a.nav-link-charts {
+    background-color: #000000;      /* Fundo Preto (Tela desligada) */
+    color: var(--terminal-green);   /* Verde Fósforo */
+    border: 2px solid var(--terminal-green);
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); /* Glow suave */
+    text-transform: lowercase;
+    position: relative;
+    letter-spacing: 1px;
+}
+
+/* Adiciona um prompt ">" antes do texto */
+nav a.nav-link-charts::before {
+    content: ">_ ";
+    animation: blink 1s infinite;
+}
+
+nav a.nav-link-charts:hover {
+    background-color: var(--terminal-green);
+    color: #000000;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.6); /* Glow forte no hover */
+    transform: translateY(0); /* Sem movimento físico, apenas luz */
+}
+
+/* ==========================================================================
+   TICKER (SEPARADO VISUALMENTE)
+   ========================================================================== */
+.ticker-wrap {
+    background: var(--secondary); /* Fundo preto total */
+    color: var(--text-main);
+    border-top: 4px solid var(--primary); /* Linha laranja separando do Header */
+    border-bottom: 4px solid var(--primary);
+    font-size: 0.85rem;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    height: 45px;
+    margin-top: 5px; /* Um pequeno gap físico transparente */
+}
+
+.ticker-heading {
+    background: var(--primary);
+    color: var(--secondary);
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-weight: 900;
+    font-family: var(--font-display);
+    letter-spacing: 1px;
+    z-index: 10;
+    box-shadow: 4px 0px 0px rgba(0,0,0,0.5);
+}
+
+.ticker {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker 30s linear infinite;
+    padding-left: 20px;
+}
+
+.ticker-item {
+    margin-right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Courier New', monospace; /* Fonte técnica para os números */
+}
+
+.ticker-item .value { color: var(--primary); font-weight: bold; }
+
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ==========================================================================
+   LAYOUT PRINCIPAL (WRAPPER)
+   ========================================================================== */
+#wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 380px; /* Conteúdo | Sidebar */
+    gap: 0;
+    border-left: var(--border-thick);
+    border-right: var(--border-thick);
+    min-height: 100vh;
+}
+
+#container {
+    padding: 40px;
+    border-right: var(--border-thick);
+}
+
+#sidebar {
+    background: rgba(0,0,0,0.2);
+    padding: 20px;
+}
+
+/* ==========================================================================
+   POSTS (ESTILO ZINE)
+   ========================================================================== */
+/* Estilo do Post Destaque (Gerado via JS) */
+.post {
+    background: var(--secondary);
+    border: 2px solid var(--text-main);
+    padding: 0;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-hard);
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.post:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 12px 12px 0px var(--primary);
+}
+
+.post-img-container {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    border-bottom: 4px solid var(--primary);
+}
+
+.post-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.2); /* Estilo Jornal/Zine */
+    transition: filter 0.3s;
+}
+
+.post:hover .post-img-container img {
+    filter: grayscale(0%) contrast(1); /* Ganha cor no hover */
+}
+
+/* Texto sobre a imagem */
+.post-img-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: var(--bg-color);
+    padding: 15px;
+    border-top: 4px solid var(--secondary);
+    border-right: 4px solid var(--secondary);
+    max-width: 80%;
+}
+
+.post-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.post-subtitle {
+    font-size: 1rem;
+    color: var(--text-main);
+}
+
+.post-body {
+    padding: 25px;
+    color: var(--text-main);
+}
+
+.post-category {
+    background: var(--primary);
+    color: var(--secondary);
+    padding: 4px 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+
+/* Botões do Post */
+.terminal-btn {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 10px 20px;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+}
+
+.terminal-btn:hover {
+    background: var(--primary);
+    color: var(--secondary);
+}
+
+/* Lista de Arquivo (Recentes) */
+.terminal-list li {
+    padding: 15px 0;
+    border-bottom: 1px dashed var(--text-dim);
+}
+
+.terminal-list a:hover {
+    background: var(--primary);
+    color: var(--secondary);
+    padding: 2px 5px;
+}
+
+/* ==========================================================================
+   WIDGETS DA SIDEBAR (TERMINAL STYLE)
+   ========================================================================== */
+.widget {
+    background: var(--secondary);
+    border: 1px solid var(--text-dim);
+    padding: 20px;
+    margin-bottom: 30px;
+    color: var(--text-main);
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.widget::before {
+    /* Barra de título do terminal */
+    content: "";
+    display: block;
+    height: 4px;
+    background: var(--primary);
+    margin: -20px -20px 20px -20px;
+}
+
+.widget h3 {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--primary);
+    margin-bottom: 15px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.widget h3 a { color: var(--primary); text-decoration: underline; }
+
+/* LLM Ranking Widget */
+.llm-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+    font-size: 0.85rem;
+}
+.llm-item:hover { background: #111; }
+
+.llm-rank { font-weight: bold; color: var(--primary); width: 30px; }
+.llm-info { flex-grow: 1; }
+.llm-name { font-weight: bold; }
+.llm-meta { font-size: 0.7rem; color: var(--text-dim); }
+.hf-badge { background: #ffbd2e; color: black; font-size: 0.6rem; padding: 1px 3px; border-radius: 2px; }
+.llm-score { color: var(--terminal-green); }
+
+/* NASA Widget */
+.nasa-image-container img, .nasa-image-container iframe {
+    width: 100%;
+    height: auto;
+    border: 2px solid var(--text-main);
+    margin-bottom: 10px;
+}
+
+.nasa-meta button {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    cursor: pointer;
+    font-size: 0.7rem;
+    margin-top: 5px;
+    text-decoration: underline;
+}
+
+/* Typewriter Cursor */
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background: var(--primary);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Tooltip Customizado */
+.custom-tooltip {
+    position: absolute;
+    background: var(--primary);
+    color: var(--secondary);
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 2px solid var(--secondary);
+    pointer-events: none;
+    display: none;
+    z-index: 1000;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+footer {
+    background: var(--secondary);
+    color: var(--text-dim);
+    border-top: 8px solid var(--primary);
+    padding: 60px 20px;
+    grid-column: span 2; /* Para ocupar toda a largura no grid */
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.footer-info h2 {
+    font-family: var(--font-display);
+    color: var(--text-main);
+    font-size: 2rem;
+    text-shadow: 2px 2px 0px var(--primary);
+}
+
+.social-clean ul { display: flex; gap: 15px; }
+.social-clean img { width: 24px; filter: invert(1); } /* Inverte ícones pretos para branco */
+
+/* ==========================================================================
+   RESPONSIVIDADE
+   ========================================================================== */
+@media (max-width: 900px) {
+    #wrapper { grid-template-columns: 1fr; border: none;}
+    #container { border-right: none; padding: 20px; }
+    #sidebar { border-top: var(--border-thick); }
+    
+    .header-content { flex-direction: column; text-align: center; }
+    .logo-text { font-size: 2.5rem; }
+    
+    .post-img-container { height: 250px; }
+    .post-img-overlay { position: relative; max-width: 100%; border: none; border-bottom: 2px solid var(--primary); }
+    
+    .ticker-item { font-size: 0.8rem; }
+}

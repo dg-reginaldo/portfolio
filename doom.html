@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAC // REMOTE TERMINAL</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://js-dos.com/6.22/current/js-dos.css">
+
+    <style>
+        /* ==========================================================================
+           ESTÉTICA UAC / DOOM (PAGE SPECIFIC CSS)
+           ========================================================================== */
+        :root {
+            --uac-bg: #050505;
+            --uac-gray: #2a2a2a;
+            --uac-red: #cc0000;
+            --uac-green: #33ff00;
+            --crt-scanline: rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            background-color: var(--uac-bg);
+            color: #ddd;
+            font-family: 'VT323', monospace;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden; /* Sem scroll na tela do jogo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Textura de fundo estilo metal sujo */
+            background-image: 
+                radial-gradient(circle at center, transparent 0%, #000 90%),
+                repeating-linear-gradient(45deg, #111 0, #111 2px, #0a0a0a 2px, #0a0a0a 4px);
+        }
+
+        /* O GRANDE MONITOR CRT */
+        .uac-console-wrapper {
+            position: relative;
+            width: 900px;
+            max-width: 95vw;
+            background: #111;
+            border: 4px solid #444;
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(204, 0, 0, 0.15);
+            padding: 5px;
+        }
+
+        /* Moldura Decorativa "Hardware" */
+        .uac-bezel {
+            border: 20px solid var(--uac-gray);
+            border-bottom-width: 40px; /* Base mais grossa */
+            border-radius: 4px;
+            position: relative;
+            background: #1a1a1a;
+            box-shadow: inset 0 0 20px #000;
+        }
+
+        /* Logo da UAC na moldura */
+        .uac-logo {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #666;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.1);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .uac-logo::before {
+            content: ''; display: inline-block; width: 10px; height: 10px; 
+            background: #cc0000; clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+        }
+
+        /* A TELA EM SI (Onde o jogo e o boot aparecem) */
+        .crt-screen {
+            background: #000;
+            width: 100%;
+            aspect-ratio: 4/3; /* Proporção clássica */
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px; /* Leve curva nos cantos da tela */
+        }
+
+        /* Efeito de Scanlines (Sobreposição) */
+        .scanlines {
+            position: absolute; inset: 0; pointer-events: none; z-index: 50;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8); /* Vinheta interna */
+            animation: flicker 0.15s infinite;
+            opacity: 0.8;
+        }
+
+        /* TELA DE BOOT (TEXTO) */
+        #boot-sequence {
+            position: absolute; inset: 0;
+            padding: 40px;
+            color: var(--uac-green);
+            font-size: 1.5rem;
+            text-shadow: 0 0 5px var(--uac-green);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            z-index: 20;
+        }
+
+        .boot-line { margin-bottom: 10px; opacity: 0; } /* Começa invisível */
+        .boot-line.visible { opacity: 1; }
+        
+        .error-text { color: var(--uac-red); text-shadow: 0 0 5px var(--uac-red); }
+        .final-text { 
+            margin-top: auto; 
+            font-size: 3rem; 
+            text-align: center; 
+            color: #fff;
+            font-family: 'Press Start 2P';
+            animation: pulse-final 2s infinite;
+        }
+
+        /* O CONTAINER DO JOGO (JS-DOS) */
+        #dos-canvas-wrapper {
+            width: 100%; height: 100%;
+            display: none; /* Escondido até o boot terminar */
+            z-index: 10;
+        }
+        /* Ajuste fino para o canvas do js-dos preencher a tela */
+        .dosbox-container { width: 100% !important; height: 100% !important; }
+
+        /* PAINEL LATERAL (TECH SPECS - DECORAÇÃO) */
+        .side-panel {
+            position: absolute;
+            right: -180px; top: 0; bottom: 0;
+            width: 160px;
+            display: flex; flex-direction: column; gap: 20px;
+            font-family: monospace; font-size: 0.7rem; color: #555;
+        }
+        
+        .tech-box { border: 1px solid #333; padding: 10px; background: #080808; }
+        .tech-box h4 { margin: 0 0 5px 0; color: var(--uac-red); border-bottom: 1px solid #333; }
+        .tech-data { display: flex; justify-content: space-between; margin-bottom: 3px; }
+        .bar-graph { height: 4px; background: #333; margin-top: 2px; overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--uac-green); width: 0%; animation: load-bar 3s infinite; }
+
+        /* Animações */
+        @keyframes flicker { 0% { opacity: 0.8; } 50% { opacity: 0.75; } 100% { opacity: 0.8; } }
+        @keyframes pulse-final { 0%, 100% { opacity: 1; text-shadow: 0 0 20px #fff; } 50% { opacity: 0.5; } }
+        @keyframes load-bar { 0% { width: 10%; } 50% { width: 80%; } 100% { width: 40%; } }
+
+        /* Botão Voltar (Estilo Emergência) */
+        .emergency-exit {
+            position: fixed; bottom: 20px; left: 20px;
+            color: #444; text-decoration: none; border: 1px solid #444;
+            padding: 10px 20px; font-family: 'Space Mono', monospace;
+            transition: 0.3s;
+        }
+        .emergency-exit:hover { border-color: var(--uac-red); color: var(--uac-red); background: rgba(200,0,0,0.1); }
+
+    </style>
+</head>
+<body>
+
+    <a href="blog.html" class="emergency-exit">&lt; EMERGENCY EXIT / VOLTAR AO BLOG</a>
+
+    <div class="uac-console-wrapper">
+        <div class="uac-bezel">
+            
+            <div class="crt-screen">
+                <div class="scanlines">
+                </div>
+
+                <div id="boot-sequence">
+                </div>
+
+                <canvas id="dos-canvas-wrapper" width="640" height="400">
+                </canvas>
+            </div>
+
+            <div class="uac-logo">UAC REMOTE TERMINAL v.6.66</div>
+        </div>
+
+        <div class="side-panel">
+            <div class="tech-box">
+                <h4>MEMORY MAP</h4>
+                <div class="tech-data"><span>HEAP:</span><span>0x8F4</span></div>
+                <div class="tech-data"><span>STACK:</span><span>0x2A1</span></div>
+                <div class="bar-graph"><div class="bar-fill" style="animation-duration: 1.5s; background:var(--uac-red)"></div></div>
+            </div>
+            <div class="tech-box">
+                <h4>RENDERER</h4>
+                <div class="tech-data"><span>BSP:</span><span>ACTIVE</span></div>
+                <div class="tech-data"><span>RAYS:</span><span>CASTING</span></div>
+            </div>
+            <div class="tech-box">
+                <h4>DEMON</h4>
+                <div style="font-size: 2rem; color: var(--uac-red); text-align:center;">⚠</div>
+                <div style="text-align:center; margin-top:5px;">CONTAINMENT<br>FAILING</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
+
+    <script>
+        // =========================================================
+        // LÓGICA DA TRANSIÇÃO E DO JOGO
+        // =========================================================
+
+        const bootSequenceLines = [
+            { text: "UAC BIOS v1.09 initialized...", delay: 500 },
+            { text: "CHECKING MEMORY INTEGRITY... OK", delay: 1000 },
+            { text: "MOUNTING DRIVE C: [LEGACY_VOL]... OK", delay: 1800 },
+            { text: "LOADING WAD MANAGER (BSP_TREE)... OK", delay: 2500 },
+            { text: "SUMMONING DAEMONS... [WARNING: LEVEL 5]", delay: 3500, style: "error-text" },
+            { text: "ESTABLISHING NEURAL LINK...", delay: 4500 },
+            { text: "...", delay: 5500 },
+            { text: "YES... IT RUNS DOOM.", delay: 6500, style: "final-text" }
+        ];
+
+        const bootContainer = document.getElementById('boot-sequence');
+        const gameContainer = document.getElementById('dos-canvas-wrapper');
+
+        // Função para tocar a animação de texto
+        function runBootSequence() {
+            bootSequenceLines.forEach((line, index) => {
+                setTimeout(() => {
+                    const p = document.createElement('div');
+                    p.className = `boot-line visible ${line.style || ''}`;
+                    p.innerHTML = line.text; // innerHTML permite tags se precisar
+                    bootContainer.appendChild(p);
+
+                    // Scroll automático para baixo se encher a tela
+                    // bootContainer.scrollTop = bootContainer.scrollHeight;
+
+                    // SE FOR A ÚLTIMA LINHA (O CLÍMAX)
+                    if (index === bootSequenceLines.length - 1) {
+                        setTimeout(startGame, 3000); // Espera 3s lendo "YES... IT RUNS DOOM"
+                    }
+                }, line.delay);
+            });
+        }
+
+        // Função que inicia o Jogo
+        function startGame() {
+            // 1. Limpa a tela de boot (Fade out visual seria ideal, mas removemos direto para performance)
+            bootContainer.style.display = 'none';
+            
+            // 2. Mostra o container do jogo
+            gameContainer.style.display = 'block';
+
+            // 3. INICIALIZAÇÃO DO JS-DOS
+            // -------------------------------------------------------------
+            // [PLACEHOLDER] - É AQUI QUE VOCÊ VAI COLOCAR SEU ARQUIVO .jsdos
+            // -------------------------------------------------------------
+            
+            // Verifica se o objeto Dos existe
+            if (typeof Dos !== 'undefined') {
+                Dos(document.getElementById("dos-canvas-wrapper"), {
+                    style: "none", 
+                    
+                    // --- ADICIONE ESTA LINHA ABAIXO ---
+                    // Isso força o emulador a ser baixado da internet, e não do seu PC
+                    wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js",
+                    // ----------------------------------
+
+                    onprogress: (stage, total, loaded) => {
+                        console.log(stage, loaded / total);
+                    }
+                }).ready((fs, main) => {
+                    
+                    console.log("Tentando carregar o bundle...");
+
+                    // Se certifique que o caminho aqui está correto também!
+                    fs.extract("assets/games/doom.jsdos").then(() => {
+                        console.log("Bundle extraído! Iniciando...");
+                        
+                        main(["-c", "DOOM.EXE"]).then((ci) => {
+                            console.log("Jogo iniciado!");
+                        });
+                    }).catch(err => {
+                        console.error("ERRO:", err);
+                        gameContainer.innerHTML = `<h2 style='color:red; padding:20px'>ERRO: ${err.message}</h2>`;
+                    });
+                });
+            } else {
+                gameContainer.innerHTML = "<h2 style='color:red'>ERRO: JS-DOS NÃO CARREGOU.</h2>";
+            }
+        }
+
+        // Inicia tudo ao carregar a página
+        window.onload = runBootSequence;
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Metrics | Dashboard</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Iceberg&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/blog.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* CSS Específico da Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .chart-card {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            padding: 20px;
+            position: relative;
+        }
+
+        .chart-header {
+            border-bottom: 1px solid #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chart-title {
+            color: var(--primary);
+            font-family: var(--font-logo);
+            font-size: 1.2rem;
+        }
+
+        .live-indicator {
+            font-size: 0.7rem;
+            color: #4CAF50;
+            animation: blink 2s infinite;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        /* Estilos do Rodapé de Dados */
+        .data-footer {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding: 0 20px 40px;
+            border-top: 1px solid #333;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .data-footer h4 {
+            color: var(--text-dim);
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-family: var(--font-mono);
+            letter-spacing: 1px;
+        }
+
+        .disclaimer-box p {
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .sources-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sources-list li {
+            margin-bottom: 8px;
+            border-left: 2px solid #333;
+            padding-left: 10px;
+        }
+
+        .sources-list strong {
+            color: #888;
+        }
+
+        /* Responsividade para celular */
+        @media (max-width: 768px) {
+            .data-footer {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        @keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="blog.html" class="logo-text">TERCEIRO SETOR</a>
+            <nav>
+                <ul>
+                    <li><a href="blog.html" style="color: var(--secondary);"> &lt; ./voltar_home</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="dashboard-grid">
+            
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">MARKET_INDEX :: NVDA</span>
+                    <span class="live-indicator">● LIVE</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="stockChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">CRITICAL_MATERIALS (SETM)</span>
+                    <span class="dim">LITHIUM / COPPER / NICKEL</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="materialChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">MODEL_CAPABILITIES</span>
+                    <span class="dim">OPEN vs PROPRIETARY BENCHMARK</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">GLOBAL_COMPUTE_ENERGY</span>
+                    <span class="dim">ESTIMATED GROWTH (TWh)</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="energyChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+        <div class="data-footer">
+            <div class="disclaimer-box">
+                <h4>// DATA_INTEGRITY_NOTICE</h4>
+                <p>
+                    Este painel opera em um ambiente de arquitetura estática. Enquanto métricas de pesquisa e contagem de modelos utilizam APIs ativas (OpenAlex, Hugging Face), os indicadores de mercado financeiro e consumo energético podem apresentar dados simulados ou com latência para fins de visualização de tendências (Demonstrative Mode). Não utilize para decisões financeiras reais.
+                </p>
+            </div>
+
+            <div class="sources-list">
+                <h4>>> FONTE_DADOS</h4>
+                <ul>
+                    <li><strong>MARKETS (NVDA/SETM):</strong> Finnhub API / Nasdaq Data (Simulação de Variação).</li>
+                    <li><strong>CAPABILITIES RADAR:</strong> Hugging Face Open LLM Leaderboard & GPT-4 Technical Report.</li>
+                    <li><strong>ENERGY ESTIMATES:</strong> IEA Electricity 2024 Report & Schneider Electric Data Center Outlook.</li>
+                    <li><strong>GEN_AI RESEARCH:</strong> OpenAlex Global Index (Live API Fetch).</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Configurações Globais
+        Chart.defaults.color = '#666';
+        Chart.defaults.font.family = 'Space Mono';
+        Chart.defaults.scale.grid.color = '#1a1a1a';
+        
+        const C_PRIMARY = '#FF6B00';
+        const C_SEC = '#00f3ff';
+
+        // --- 1. NVDA STOCK (Live Simulado) ---
+        const initStockChart = () => {
+            const ctx = document.getElementById('stockChart');
+            const initialData = Array.from({length: 30}, () => 120 + Math.random() * 5);
+            
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array(30).fill(''),
+                    datasets: [{
+                        label: 'NVDA',
+                        data: initialData,
+                        borderColor: C_SEC,
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: {display: false} },
+                    scales: { x: {display: false}, y: {ticks: {callback: v => '$' + v}} }
+                }
+            });
+
+            setInterval(() => {
+                const last = chart.data.datasets[0].data.slice(-1)[0];
+                const next = last + (Math.random() - 0.5) * 2;
+                chart.data.datasets[0].data.push(next);
+                chart.data.datasets[0].data.shift();
+                chart.update('none');
+            }, 1000);
+        };
+
+        // --- 2. MATERIALS ETF (SETM) ---
+        const initMaterialChart = () => {
+            const ctx = document.getElementById('materialChart');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'SETM Price',
+                        data: [20.5, 21.2, 20.8, 22.1, 23.5, 22.4],
+                        borderColor: '#FFD700', // Dourado
+                        backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: {display: false} },
+                    scales: { x: {display: false} }
+                }
+            });
+        };
+
+        // --- 3. RADAR CAPABILITIES (Restaurado) ---
+        const initRadarChart = () => {
+            const ctx = document.getElementById('radarChart');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Lógica', 'Coding', 'Criatividade', 'Matemática', 'Visão', 'Ética'],
+                    datasets: [{
+                        label: 'GPT-4o (Closed)',
+                        data: [95, 92, 88, 94, 90, 75],
+                        borderColor: C_PRIMARY,
+                        backgroundColor: 'rgba(255, 107, 0, 0.2)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Llama-3-70B (Open)',
+                        data: [89, 88, 85, 87, 80, 92], // Ética/Abertura maior
+                        borderColor: C_SEC,
+                        backgroundColor: 'rgba(0, 243, 255, 0.1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#333' },
+                            grid: { color: '#333' },
+                            pointLabels: { color: '#ccc', font: {size: 11} },
+                            suggestedMin: 50
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: {color: '#888'} }
+                    }
+                }
+            });
+        };
+
+        // --- 4. ENERGY CONSUMPTION ---
+        const initEnergyChart = () => {
+            const ctx = document.getElementById('energyChart');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2021', '2022', '2023', '2024', '2025 (Est)'],
+                    datasets: [{
+                        label: 'TWh',
+                        data: [240, 310, 460, 650, 900],
+                        backgroundColor: ['#333', '#444', C_SEC, C_PRIMARY, '#ff0000']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: {display: false} },
+                    scales: { x: {grid: {display: false}}, y: {grid: {color: '#222'}} }
+                }
+            });
+        };
+
+        // Inicializa
+        document.addEventListener('DOMContentLoaded', () => {
+            initStockChart();
+            initMaterialChart();
+            initRadarChart();
+            initEnergyChart();
+        });
+    </script>
+</body>
+</html>

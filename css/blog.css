@@ -1,0 +1,969 @@
+/* ==========================================================================
+   THEME: DEEP OCEAN & HIGH VOLTAGE (Cyberpunk Activist)
+   ========================================================================== */
+
+:root {
+    /* PALETA: Profundidade Oceânica e Voltagem */
+    --bg-deep: #02050a;       /* O fundo mais escuro possível antes do preto */
+    --bg-panel: #09101a;      /* Painéis levemente mais claros */
+    --bg-grid: rgba(0, 243, 255, 0.03); /* Grade sutil */
+    
+    --primary: #ff4800;       /* Laranja "High Voltage" (Ação/Alerta) */
+    --secondary: #00f3ff;     /* Ciano Elétrico (Dados/Tech) */
+    
+    --text-main: #cdd6f4;     /* Branco gelo para leitura */
+    --text-muted: #64748b;    /* Cinza azulado para metadados */
+    
+    --font-mono: 'Space Mono', monospace;
+    --font-display: 'Iceberg', cursive; /* Mantido do seu HTML */
+    
+    --border-tech: 1px solid rgba(0, 243, 255, 0.1);
+    --border-alert: 1px solid var(--primary);
+}
+
+/* ==========================================================================
+   RESET E ESTRUTURA GLOBAL
+   ========================================================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: var(--bg-deep);
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    overflow-x: hidden;
+    
+    /* Textura de fundo estilo "Grid Tático" */
+    background-image: 
+        linear-gradient(var(--bg-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+a { text-decoration: none; color: inherit; transition: 0.3s; }
+ul { list-style: none; }
+
+/* Scrollbar Customizada */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--secondary); }
+
+/* ==========================================================================
+   BARRA DE PROGRESSO (Preservando ID do HTML)
+   ========================================================================== */
+#progress-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 3px;
+    background: transparent; z-index: 9999;
+}
+#progress-bar {
+    height: 100%;
+    background: var(--primary); /* Laranja */
+    width: 0%;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+/* ==========================================================================
+   HEADER & NAV
+   ========================================================================== */
+.header {
+    background: rgba(2, 5, 10, 0.9);
+    border-bottom: 1px solid var(--secondary); /* Linha de energia ciano */
+    padding: 15px 0;
+    position: sticky; top: 0; z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.header-content {
+    max-width: 1300px; margin: 0 auto; padding: 0 20px;
+    display: flex; justify-content: space-between; align-items: center;
+}
+
+/* Estilização do Logo (Baseado na estrutura <span><br>...</span>) */
+.logo-text {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    line-height: 0.9;
+    color: var(--primary);
+    text-transform: uppercase;
+    display: flex; gap: 10px;
+    text-shadow: 0 0 5px rgba(255, 72, 0, 0.3);
+}
+
+.logo-text span { display: block; }
+.logo-text:hover { color: var(--secondary); text-shadow: 0 0 8px var(--secondary); }
+
+nav ul { display: flex; gap: 25px; }
+nav a {
+    font-size: 0.9rem; letter-spacing: 1px; color: var(--text-muted);
+}
+nav a:hover, .nav-link-charts {
+    color: var(--secondary);
+    text-shadow: 0 0 5px var(--secondary);
+}
+.nav-link-charts {
+    color: var(--secondary) !important; /* Ciano */
+    border: 1px solid var(--secondary);
+    padding: 6px 14px;
+    background: rgba(0, 243, 255, 0.05);
+    letter-spacing: 2px;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 5px rgba(0, 243, 255, 0.2);
+}
+
+/* Efeito Hover: Preenchimento e Brilho */
+.nav-link-charts:hover {
+    background: var(--secondary);
+    color: #000 !important; /* Texto preto para contraste */
+    box-shadow: 0 0 20px var(--secondary);
+    text-shadow: none;
+}
+
+/* Animação sutil de "pulsação" para chamar atenção */
+.nav-link-charts {
+    animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+    0% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(0, 243, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
+}
+
+/* ==========================================================================
+   TICKER (FAIXA DE DADOS)
+   ========================================================================== */
+.ticker-wrap {
+    background: var(--primary); /* Laranja vibrante */
+    color: #000; /* Texto preto para contraste máximo de alerta */
+    height: 30px;
+    overflow: hidden;
+    white-space: nowrap;
+    border-bottom: 1px solid #000;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: flex; align-items: center;
+}
+
+.ticker-heading {
+    background: #000; color: var(--primary);
+    padding: 0 15px; height: 100%;
+    display: flex; align-items: center; z-index: 10;
+    font-family: var(--font-display);
+}
+
+.ticker { display: inline-block; padding-left: 100%; animation: ticker 40s linear infinite; }
+.ticker-item {
+    display: inline-block; /* O SEGREDO: Coloca um item ao lado do outro */
+    margin-right: 40px;    /* Espaço entre as notícias */
+    vertical-align: middle;
+}
+.ticker-item .value { font-family: monospace; background: rgba(0,0,0,0.1); padding: 0 5px; }
+
+@keyframes ticker { 100% { transform: translate3d(-100%, 0, 0); } }
+
+.ticker-item .glowing-link {
+    display: inline-block;
+    background-color: #000;
+    color: var(--primary); /* Laranja */
+    text-decoration: none;
+    padding: 2px 8px;
+    border: 1px solid #000;
+    font-family: var(--font-mono);
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: 0.2s;
+    /* Faz parecer um botão físico encravado na barra */
+    box-shadow: inset 0 0 5px rgba(255, 85, 0, 0.5); 
+}
+
+.ticker-item .glowing-link:hover {
+    background-color: var(--text-main); /* Branco */
+    color: #000;
+    border-color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 10px #fff;
+}
+
+/* ==========================================================================
+   LAYOUT PRINCIPAL
+   ========================================================================== */
+#wrapper {
+    display: grid;
+    grid-template-columns: 1fr 350px; /* Conteúdo | Sidebar */
+    gap: 40px;
+    max-width: 1300px; margin: 40px auto; padding: 0 20px;
+}
+
+/* ==========================================================================
+   BLOG POSTS (Gerados pelo JS)
+   ========================================================================== */
+/* O JS gera <article class="post"> */
+.post {
+    background: var(--bg-panel);
+    border: var(--border-tech);
+    margin-bottom: 50px;
+    position: relative;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    overflow: hidden;
+}
+
+.post:hover {
+    border-color: var(--secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 243, 255, 0.05);
+}
+
+/* Container da Imagem */
+.post-img-container {
+    width: 100%; height: 300px; overflow: hidden;
+    border-bottom: 1px solid #1a2c42;
+    position: relative;
+}
+
+/* Efeito Cyberpunk na Imagem: PB -> Colorida no Hover */
+.post img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(100%) contrast(1.2) brightness(0.8);
+    mix-blend-mode: luminosity;
+    transition: all 0.5s ease;
+}
+
+.post:hover img {
+    filter: grayscale(0%) contrast(1) brightness(1);
+    mix-blend-mode: normal;
+}
+
+/* Overlay de Scanline sobre a imagem */
+.post-img-container::after {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(transparent, transparent 2px, rgba(0,0,0,0.5) 3px);
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+/* Corpo do Post */
+.post-body { padding: 25px; }
+
+.post-title {
+    font-family: var(--font-display);
+    font-size: 2rem; color: var(--text-main);
+    margin-bottom: 10px; line-height: 1.2;
+}
+.post-title:hover { color: var(--primary); }
+
+/* Metadados (Data/Categoria) gerados pelo JS */
+.post-meta {
+    font-size: 0.75rem; color: var(--secondary);
+    text-transform: uppercase; margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.post-excerpt {
+    color: #a0aec0; font-size: 1rem; margin-bottom: 20px;
+}
+
+/* Botão "Ler Mais" */
+.read-more {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.8rem; text-transform: uppercase;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.read-more:hover {
+    background: var(--primary); color: #000;
+    box-shadow: 0 0 15px rgba(255, 72, 0, 0.4);
+}
+
+/* ==========================================================================
+   LINK DE COMANDO (TERMINAL BTN - VERSÃO SUTIL)
+   ========================================================================== */
+
+.terminal-btn {
+    /* Layout: Removemos o "bloco" grande */
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0; /* Apenas espaçamento vertical, sem laterais */
+    margin-top: 15px;
+    
+    /* Estilo: Minimalista e Tecnológico */
+    background: transparent;
+    border: none; /* Sem borda ao redor */
+    border-bottom: 1px solid rgba(0, 243, 255, 0.3); /* Linha fina ciano em baixo */
+    
+    /* Cor: Mudança para Ciano (Dados/Frio) em vez de Laranja */
+    color: var(--secondary); 
+    
+    font-family: var(--font-mono);
+    font-size: 0.8rem; /* Fonte menor e mais discreta */
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* --- ESTADO HOVER --- */
+.terminal-btn:hover {
+    color: #fff; /* Texto fica branco para leitura clara */
+    border-bottom-color: var(--secondary); /* A linha de baixo acende */
+    text-shadow: 0 0 8px var(--secondary); /* Brilho sutil no texto */
+    padding-left: 10px; /* Pequeno movimento para direita */
+}
+
+/* --- ÍCONE (A SETA) --- */
+.terminal-btn .icon {
+    font-size: 0.9em;
+    transition: transform 0.3s ease;
+    color: var(--secondary);
+}
+
+/* Ao passar o mouse, a seta se afasta um pouco */
+.terminal-btn:hover .icon {
+    transform: translateX(3px);
+}
+
+/* --- DETALHE OPCIONAL: CURSOR PISCANDO NO FINAL --- */
+/* Adiciona um underscore que pisca no final do link, estilo terminal */
+.terminal-btn::after {
+    content: '_';
+    opacity: 0;
+    margin-left: 5px;
+    color: var(--secondary);
+    transition: opacity 0.3s;
+}
+
+.terminal-btn:hover::after {
+    opacity: 1;
+    animation: blink 1s infinite;
+}
+
+/* ==========================================================================
+   ARCHIVE LOG (Recent Posts Feed)
+   ========================================================================== */
+
+/* Container da Lista - Removemos os bullets padrão */
+ul.terminal-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #1a2c42; /* Borda sutil em volta de todo o log */
+    font-family: var(--font-mono); /* Fonte monoespaçada é essencial */
+}
+
+/* Estilo Base de Cada Linha (Item do Log) */
+.terminal-list li {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Linha divisória fina */
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* O LINK dentro do li deve ocupar o espaço e herdar a cor */
+.terminal-list li a {
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    display: block;
+}
+
+/* ==========================================================================
+   EFEITO ZEBRADO (STRIPED) & VISUAL HACKER
+   ========================================================================== */
+
+/* Linhas Ímpares: Fundo levemente mais claro (quase imperceptível, mas dá textura) */
+.terminal-list li:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Linhas Pares: Fundo transparente (cor do site) */
+.terminal-list li:nth-child(even) {
+    background-color: transparent;
+}
+
+/* HOVER: O efeito de seleção "High Tech" */
+.terminal-list li:hover {
+    background-color: rgba(0, 243, 255, 0.1); /* Ciano bem suave */
+    color: var(--secondary); /* Texto fica Ciano Elétrico */
+    padding-left: 30px; /* O texto "pula" para a direita levemente */
+    border-left: 4px solid var(--secondary); /* Barra lateral de destaque */
+}
+
+/* ADICIONANDO MARCADORES DE CÓDIGO (Pseudoelementos) */
+
+/* Antes de cada item, adicionamos um prompt de terminal ">>" ou timestamp falso */
+.terminal-list li a::before {
+    content: ">> ";
+    color: var(--primary); /* Laranja */
+    margin-right: 10px;
+    font-weight: bold;
+    opacity: 0.7;
+}
+
+/* Ao passar o mouse, o prompt muda para indicar ação */
+.terminal-list li:hover a::before {
+    content: "[OPEN] >> ";
+    color: var(--secondary);
+    opacity: 1;
+}
+
+/* Ajuste do Título H3 para garantir que combine */
+#recent-posts-feed h3 {
+    border-bottom: 2px solid var(--primary);
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 25px; /* Espaço maior entre título e lista */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* ==========================================================================
+   SIDEBAR & WIDGETS
+   ========================================================================== */
+#sidebar { display: flex; flex-direction: column; gap: 30px; }
+
+.widget {
+    background: var(--bg-panel);
+    border: var(--border-tech);
+    padding: 20px;
+}
+
+.widget h3 {
+    font-family: var(--font-mono);
+    color: var(--secondary);
+    font-size: 0.85rem;
+    border-bottom: 1px dashed var(--secondary);
+    padding-bottom: 10px; margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+/* Estilo para listas dentro de widgets (News, Arquivo, etc) */
+.widget ul li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.widget ul li a:hover { color: var(--primary); padding-left: 5px; }
+
+/* Efeito de digitação (Typewriter) */
+#typewriter {
+    font-family: 'Courier New', monospace;
+    color: var(--secondary);
+    min-height: 60px;
+}
+#typewriter::after {
+    content: '_'; animation: blink 1s infinite;
+}
+
+/* Ajustes específicos para o Widget de LLM (gerado pelo JS) */
+.llm-item {
+    display: flex; justify-content: space-between;
+    font-size: 0.85rem; padding: 5px 0;
+}
+.llm-name { color: var(--text-main); }
+.llm-score { color: var(--primary); font-weight: bold; }
+
+/* ==========================================================================
+   WIDGET: COMUNIDADE PULSE
+   ========================================================================== */
+
+/* Estilização base de cada linha do pulso */
+.pulse-item {
+    padding: 12px 15px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+    
+    /* Flexbox para alinhar a tag com o texto */
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    cursor: default;
+}
+
+/* 1. EFEITO ZEBRADO (STRIPED) */
+/* Usamos nth-of-type para alternar as cores das linhas */
+.pulse-item:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.025);
+}
+
+.pulse-item:nth-of-type(even) {
+    background-color: transparent;
+}
+
+/* 2. HOVER EFFECT (INTERATIVIDADE) */
+.pulse-item:hover {
+    background-color: rgba(255, 85, 0, 0.05); /* Fundo Laranja muito sutil */
+    padding-left: 20px; /* Efeito de "Slide" para a direita */
+    border-left: 3px solid var(--primary); /* Barra Laranja na esquerda */
+    color: var(--text-main);
+}
+
+/* 3. ESTILIZAÇÃO DAS TAGS [ALERTA] e [UPDATE] */
+/* Base comum para as tags */
+.pulse-alert, .pulse-update {
+    font-weight: bold;
+    font-size: 0.75rem;
+    padding: 1px 4px;
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.6); /* Fundo escuro para destacar a cor da letra */
+    border: 1px solid transparent;
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+}
+
+/* Estilo específico para [ALERTA] - Vermelho Cyberpunk */
+.pulse-alert {
+    color: #ff3333;
+    border-color: rgba(255, 51, 51, 0.3);
+    text-shadow: 0 0 5px rgba(255, 51, 51, 0.6);
+    box-shadow: 0 0 5px rgba(255, 51, 51, 0.1);
+    animation: pulse-red 2s infinite;
+}
+
+/* Estilo específico para [UPDATE] - Azul Tech */
+.pulse-update {
+    color: #0088ff;
+    border-color: rgba(0, 136, 255, 0.3);
+    text-shadow: 0 0 5px rgba(0, 136, 255, 0.6);
+}
+
+/* ANIMAÇÃO OPCIONAL: Faz o alerta "pulsar" levemente */
+@keyframes pulse-red {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+footer {
+    border-top: 2px solid var(--primary); /* Laranja no topo do footer */
+    background: #000;
+    padding: 60px 0; margin-top: 80px;
+}
+
+.footer-content {
+    max-width: 1300px; margin: 0 auto; padding: 0 20px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+}
+
+.footer-info h2 {
+    color: var(--secondary); font-family: var(--font-display);
+    font-size: 1.5rem; margin-bottom: 10px;
+}
+
+.footer-author { max-width: 400px; font-size: 0.85rem; color: #555; }
+.author-link { color: var(--primary); font-weight: bold; display: block; margin-top: 10px; }
+
+/* ==========================================================================
+   ÍCONES SOCIAIS (NORMALIZAÇÃO & HOVER)
+   ========================================================================== */
+.social-clean ul {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.social-clean li a {
+    display: block;
+    line-height: 0; /* Remove espaços fantasmas abaixo da img */
+}
+
+.social-clean img {
+    width: 24px;
+    height: 24px;
+    transition: all 0.3s ease;
+    
+    /* MÁGICA 1: Inverte as cores (Preto vira Branco) para ver no fundo escuro */
+    filter: invert(1) brightness(0.8); 
+    opacity: 0.7;
+}
+
+.social-clean a:hover img {
+    opacity: 1;
+    transform: scale(1.2); /* Cresce um pouco */
+    
+    /* MÁGICA 2: Filtro complexo para transformar Branco em Ciano (#00f3ff) */
+    /* Isso simula a cor exata do seu tema */
+    filter: invert(86%) sepia(30%) saturate(6000%) hue-rotate(130deg) brightness(100%) contrast(105%) drop-shadow(0 0 5px var(--secondary));
+}
+
+/* ==========================================================================
+   MEDIA QUERIES
+   ========================================================================== */
+@media (max-width: 900px) {
+    #wrapper { grid-template-columns: 1fr; }
+    .footer-content { flex-direction: column; gap: 40px; text-align: center; align-items: center; }
+}
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* ==========================================================================
+   WIDGET NASA: ORBITAL UPLINK
+   ========================================================================== */
+
+/* Container Principal */
+#nasa-widget-container {
+    /* A MARGEM QUE VOCÊ PEDIU: */
+    margin-top: 80px; 
+    margin-bottom: 40px;
+    
+    background-color: #000;
+    border: 1px solid var(--primary);
+    box-shadow: 0 0 20px rgba(255, 72, 0, 0.1);
+    position: relative;
+    
+    /* Remove o padding padrão da classe .widget para este elemento específico */
+    padding: 0 !important; 
+    overflow: hidden;
+}
+
+/* Cabeçalho do Terminal (Onde diz ./uplink) */
+#nasa-widget-container .widget-header {
+    background: var(--primary);
+    color: #000;
+    padding: 8px 15px;
+    border-bottom: 1px solid #000;
+}
+
+#nasa-widget-container .widget-header h3 {
+    margin: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    letter-spacing: 0px;
+    border: none;
+    padding: 0;
+}
+
+.prompt { font-weight: bold; margin-right: 5px; }
+
+/* Área de Conteúdo */
+#nasa-content {
+    min-height: 300px;
+    position: relative;
+}
+
+/* Loading State */
+#nasa-loading {
+    padding: 40px;
+    text-align: center;
+    color: var(--primary);
+    font-family: monospace;
+}
+
+/* Imagem */
+.nasa-image-container {
+    width: 100%;
+    background: #000;
+    position: relative;
+    border-bottom: 1px solid var(--primary);
+}
+
+/* Garante que a imagem injetada pelo JS ocupe o espaço corretamente */
+.nasa-image-container img, 
+.nasa-image-container iframe {
+    width: 100%;
+    height: auto;
+    max-height: 650px; /* Limite de altura para não dominar a tela */
+    object-fit: cover;
+    display: block;
+    
+    /* Filtro inicial para dar ar de "transmissão de satélite" */
+    filter: contrast(1.2) sepia(20%) hue-rotate(180deg) saturate(80%);
+    transition: filter 0.5s ease;
+}
+
+/* Ao passar o mouse, revela a cor real */
+#nasa-widget-container:hover img {
+    filter: none;
+}
+
+/* Metadados (Título, Data, Botão) */
+.nasa-meta {
+    padding: 20px;
+    background: rgba(10, 17, 30, 0.95);
+}
+
+.nasa-title {
+    font-family: var(--font-display); /* Iceberg */
+    font-size: 1.4rem;
+    color: var(--secondary);
+    margin-bottom: 5px;
+}
+
+.nasa-date {
+    color: var(--primary);
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+}
+
+/* Botão de Relatório Técnico */
+#toggle-explanation-btn {
+    background: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+#toggle-explanation-btn:hover {
+    border-color: var(--secondary);
+    color: var(--secondary);
+    background: rgba(0, 243, 255, 0.05);
+}
+
+/* Texto da Explicação */
+#nasa-explanation {
+    border-top: 1px dashed #333;
+    padding-top: 15px;
+    color: #a0aec0;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   DOOM TRIGGER: RGB SPLIT GLITCH (SEM SKEW)
+   ========================================================================== */
+
+.doom-trigger {
+    margin-top: 20px;
+    text-align: center;
+    perspective: 500px; /* Dá profundidade */
+}
+
+.doom-trigger a {
+    display: inline-block;
+    text-decoration: none;
+    cursor: crosshair; /* Mira */
+}
+
+/* --- ESTADO INICIAL (Hardware Inativo) --- */
+.glitch-icon {
+    width: 44px;
+    height: auto;
+    
+    /* Começa desligado: Escuro e sem cor */
+    filter: grayscale(100%) brightness(0.6) opacity(0.8);
+    
+    /* Garante nitidez nos pixels */
+    image-rendering: pixelated; 
+    
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.doom-trigger span {
+    display: block;
+    font-size: 0.7rem;
+    color: #555;
+    font-family: 'Press Start 2P', monospace; /* Fallback se a fonte não carregar */
+    margin-top: 8px;
+    transition: color 0.2s;
+}
+
+/* --- ESTADO HOVER (O ERRO DE TRANSMISSÃO) --- */
+
+/* 1. Ao passar o mouse, a imagem "liga" e começa a falhar */
+.doom-trigger a:hover .glitch-icon {
+    /* Remove o cinza base */
+    filter: grayscale(0%) brightness(1.1);
+    
+    /* APLICA O GLITCH RGB */
+    /* animation: nome duração timing-function delay loop */
+    animation: rgb-split 0.25s infinite linear alternate-reverse;
+}
+
+/* 2. O texto também falha levemente */
+.doom-trigger a:hover span {
+    color: #ff0000; /* Texto Vermelho */
+    text-shadow: 2px 0px 0px rgba(0, 255, 255, 0.5); /* Sombra Ciano */
+    animation: text-shake 0.3s infinite steps(2);
+}
+
+/* --- KEYFRAMES: A SEPARAÇÃO RGB --- */
+/* Usamos drop-shadow para criar "fantasmas" coloridos da imagem */
+
+@keyframes rgb-split {
+    0% {
+        /* Estado quase normal */
+        filter: drop-shadow(0 0 0 transparent);
+        transform: translate(0, 0);
+    }
+    20% {
+        /* Separação: Vermelho vai p/ Esquerda, Azul p/ Direita */
+        filter: drop-shadow(-3px 0 0 rgba(255,0,0,0.7)) drop-shadow(3px 0 0 rgba(0,255,255,0.7));
+        transform: translate(-1px, 0);
+    }
+    40% {
+        /* Separação Vertical: Verde p/ Cima, Magenta p/ Baixo */
+        filter: drop-shadow(0 -3px 0 rgba(0,255,0,0.7)) drop-shadow(0 3px 0 rgba(255,0,255,0.7));
+        transform: translate(1px, -1px);
+    }
+    60% {
+        /* Caos: 3 Cores separadas em direções opostas */
+        filter: drop-shadow(-4px -2px 0 rgba(255,0,0,0.8)) 
+                drop-shadow(4px 2px 0 rgba(0,0,255,0.8)) 
+                drop-shadow(-2px 2px 0 rgba(0,255,0,0.8));
+        transform: translate(0, 1px);
+    }
+    80% {
+        /* Flash de alto brilho e inversão leve */
+        filter: drop-shadow(2px 0 0 rgba(255,0,0,0.9)) drop-shadow(-2px 0 0 rgba(0,255,255,0.9)) brightness(1.5);
+        transform: translate(-1px, 1px);
+    }
+    100% {
+        /* Retorna a uma separação horizontal simples */
+        filter: drop-shadow(3px 0 0 rgba(255,0,0,0.6)) drop-shadow(-3px 0 0 rgba(0,0,255,0.6));
+        transform: translate(1px, 0);
+    }
+}
+
+/* Animação secundária para o texto vibrar */
+@keyframes text-shake {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(1px, 0); }
+    50% { transform: translate(-1px, 0); }
+    75% { transform: translate(0, 1px); }
+    100% { transform: translate(0, -1px); }
+}
+
+/* ==========================================================================
+   WIDGET: DOOM SECTOR (CONTAINER)
+   ========================================================================== */
+
+#doom-sector {
+    border: 1px dashed #333; /* Borda pontilhada discreta inicialmente */
+    background: rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Header do Widget */
+.sector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+#doom-sector h3 {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #555; /* Cor de "desligado" */
+    transition: color 0.3s;
+}
+
+.status-indicator {
+    font-size: 0.6rem;
+    background: #333;
+    color: #000;
+    padding: 2px 5px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+/* Conteúdo interno (Lista de arquivos falsa) */
+.file-info {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: #444;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* O Gatilho (Icone) dentro do Widget */
+.doom-trigger {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.exec-name {
+    display: block;
+    font-size: 0.65rem;
+    color: #444;
+    margin-top: 8px;
+    font-family: 'Press Start 2P', monospace;
+    transition: all 0.2s;
+}
+
+/* Footer do Widget (Scan line) */
+.sector-footer {
+    border-top: 1px solid #333;
+    margin-top: 10px;
+    padding-top: 5px;
+    font-size: 0.6rem;
+    color: #333;
+    text-align: right;
+}
+
+/* ==========================================================================
+   INTERAÇÃO: FALHA DE CONTENÇÃO (HOVER NO WIDGET)
+   ========================================================================== */
+
+/* Quando passa o mouse em QUALQUER lugar do widget */
+#doom-sector:hover {
+    border-color: #ff0000; /* Borda Vermelha */
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.1);
+    background: radial-gradient(circle, rgba(20,0,0,1) 0%, rgba(0,0,0,1) 100%);
+}
+
+#doom-sector:hover h3 {
+    color: #ff0000; /* Título Vermelho */
+    text-shadow: 0 0 5px rgba(255,0,0,0.5);
+}
+
+#doom-sector:hover .status-indicator {
+    background: #ff0000;
+    color: #000;
+    content: "DANGER"; /* Nota: content em CSS não muda texto real, apenas visualmente se usar ::after, mas a cor já alerta */
+    animation: blink-fast 0.5s infinite;
+}
+
+#doom-sector:hover .file-info {
+    color: #aa0000; /* Texto de arquivo fica vermelho escuro */
+}
+
+/* O Nome do arquivo muda de cor e vibra */
+#doom-sector:hover .exec-name {
+    color: #ff0000;
+    text-shadow: 2px 0 0 cyan; /* Glitch visual no texto */
+}
+
+#doom-sector:hover .scan-line::after {
+    content: " MALWARE DETECTED";
+    color: #ff0000;
+    font-weight: bold;
+}
+
+/* Reutilizando a animação de Blink */
+@keyframes blink-fast {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}

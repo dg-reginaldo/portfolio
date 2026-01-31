@@ -1,0 +1,983 @@
+:root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --primary: #FF6B00;
+    --secondary: #00f3ff;
+    --text-main: #e0e0e0;
+    --text-dim: #888;
+    --white: #ffffff;
+    --font-mono: 'Space Mono', monospace;
+    --font-logo: 'Iceberg', cursive;
+}
+
+/* RESET E BASE */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* BARRA DE PROGRESSO */
+#progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255,107,0,0.1);
+    z-index: 2000;
+}
+#progress-bar {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+/* HEADER */
+.header {
+    background: var(--bg);
+    border-bottom: 2px solid var(--primary);
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+.header.shrink {
+    padding: 10px 0;
+    background: rgba(13, 13, 13, 0.95);
+    backdrop-filter: blur(10px);
+}
+.header-content {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+}
+
+/* LOGO TIPO GLITCH */
+.logo-text {
+    font-family: var(--font-logo);
+    font-size: 2rem;
+    color: var(--white);
+    text-transform: uppercase;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    text-shadow: 2px 2px var(--primary);
+}
+.logo-text:hover {
+    text-shadow: -2px 0 var(--secondary), 2px 0 var(--primary);
+    }
+
+nav ul { display: flex; list-style: none; gap: 25px; }
+nav a {
+    font-family: var(--font-logo);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: 0.2s;
+    }
+
+nav a:hover { color: var(--primary); }
+
+/* LAYOUT PRINCIPAL */
+#wrapper {
+    display: grid;
+    grid-template-columns: 1fr 380px; /* Coluna larga esquerda, sidebar direita */
+    max-width: 1300px;
+    margin: 40px auto;
+    gap: 40px;
+    padding: 0 30px;
+}
+
+/* CONTEÚDO (POSTS) */
+.post {
+    background: var(--surface);
+    border: 1px solid #222;
+    margin-bottom: 60px;
+    transition: border-color 0.3s;
+}
+.post:hover { border-color: var(--primary); }
+
+.post-img-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    background: #000;
+    border-bottom: 1px solid #222;
+}
+.post img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.1);
+    transition: 0.5s;
+    opacity: 0.8;
+}
+.post:hover img {
+    filter: grayscale(0%) contrast(1);
+    opacity: 1;
+    transform: scale(1.02);
+}
+
+.post-img-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 40px;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.75),
+        rgba(0, 0, 0, 0.2),
+        transparent
+    );
+}
+
+.post-title {
+    font-family: var(--font-logo);
+    font-size: 2.8rem;
+    line-height: 1.1;
+    color: #fff;
+    text-shadow: 2px 2px 0 var(--primary);
+    margin-bottom: 10px;
+}
+
+.post-subtitle {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--text-main);
+    max-width: 80%;
+}
+
+.post-body { padding: 40px; }
+.post-category {
+    color: var(--primary);
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+.post p {
+    color: var(--text-main);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-align: justify;
+}
+.date-label {
+    display: block;
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    border-top: 1px solid #222;
+    padding-top: 20px;
+}
+
+/* SIDEBAR */
+#sidebar { display: flex; flex-direction: column; gap: 30px; }
+
+.widget {
+    background: var(--surface);
+    padding: 25px;
+    border-left: 4px solid #333;
+}
+.widget h3 {
+    font-size: 0.9rem;
+    color: var(--secondary);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Widget Terminal */
+.terminal-style {
+    background: #000;
+    border-left-color: var(--secondary);
+    font-size: 0.9rem;
+}
+.terminal-style ul { list-style: none; }
+.terminal-style li { margin-bottom: 10px; }
+.terminal-style a {
+    color: var(--text-main);
+    text-decoration: none;
+}
+.terminal-style a:hover { color: var(--primary); }
+.cursor { animation: blink 1s infinite; }
+
+/* NOVO: Estilos para o Widget de LLMs */
+.llm-list {
+    margin: 15px 0;
+}
+
+.llm-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #222;
+    transition: background-color 0.3s;
+}
+
+.llm-item:hover {
+    background-color: rgba(255, 107, 0, 0.05);
+}
+
+.llm-rank {
+    font-weight: bold;
+    color: var(--secondary);
+    width: 50px;
+    font-size: 0.9rem;
+}
+
+.llm-name {
+    flex-grow: 1;
+    color: var(--text-main);
+    font-weight: bold;
+    min-width: 120px;
+}
+
+.llm-meta {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    width: 100%;
+    margin-top: 4px;
+    margin-left: 50px;
+}
+
+.llm-score {
+    background: var(--primary);
+    color: #000;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    min-width: 45px;
+    text-align: center;
+}
+
+.llm-trending {
+    color: #4CAF50;
+    font-size: 0.8rem;
+    margin-left: 10px;
+}
+
+.widget-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #222;
+}
+
+.update-info {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.terminal-btn {
+    background: var(--primary);
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: 0.3s;
+    border-radius: 3px;
+}
+
+.terminal-btn:hover {
+    background: #ff8b40;
+    transform: translateY(-2px);
+}
+
+/* Estilos para o COMMUNIDADE_PULSE */
+.pulse-item {
+    font-size: 0.8rem;
+    border-bottom: 1px solid #333;
+    padding: 10px 0;
+}
+
+.pulse-alert {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.pulse-update {
+    color: var(--secondary);
+    font-weight: bold;
+}
+
+/* FOOTER */
+footer {
+    background: #000;
+    border-top: 4px solid var(--primary);
+    padding: 60px 0;
+    margin-top: 100px;
+}
+.footer-content {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+}
+.footer-info h2 { 
+    font-family: var(--font-logo); 
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+.footer-info p {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+}
+
+#social ul { display: flex; list-style: none; gap: 20px; }
+#social img { 
+    width: 25px; 
+    filter: invert(1); 
+    transition: 0.3s;
+}
+#social a:hover img { 
+    transform: translateY(-5px) scale(1.1); 
+    filter: invert(0.5) sepia(1) saturate(5) hue-rotate(10deg); 
+}
+
+@keyframes blink { 
+    0%, 100% { opacity: 1; } 
+    50% { opacity: 0; } 
+}
+
+/* Animação para atualização do ranking */
+@keyframes highlight-update {
+    0% { background-color: rgba(0, 243, 255, 0.1); }
+    100% { background-color: transparent; }
+}
+
+.highlight-update {
+    animation: highlight-update 1.5s ease;
+}
+
+/* Responsividade */
+@media (max-width: 1000px) {
+    #wrapper { grid-template-columns: 1fr; }
+    .post-img-container { height: 300px; }
+    .footer-content { flex-direction: column; gap: 30px; }
+}
+
+@media (max-width: 600px) {
+    .header-content { flex-direction: column; gap: 15px; }
+    nav ul { gap: 15px; }
+    .post-title { font-size: 2rem; }
+    .post-img-overlay { padding: 20px; }
+    .widget-footer { flex-direction: column; gap: 10px; align-items: flex-start; }
+}
+/* Estilos para as melhorias do post */
+.ai-disclaimer {
+    background: rgba(255, 107, 0, 0.1);
+    border-left: 4px solid var(--primary);
+    padding: 15px;
+    margin: 20px 0;
+    font-size: 0.9rem;
+    border-radius: 0 4px 4px 0;
+}
+
+.post-body a {
+    color: var(--secondary);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--secondary);
+    transition: 0.2s;
+}
+
+.post-body a:hover {
+    color: var(--primary);
+    border-bottom-style: solid;
+}
+
+.post-footer-notes {
+    background: var(--surface);
+    border: 1px solid #333;
+    padding: 25px;
+    margin-top: 40px;
+    font-size: 0.9rem;
+}
+
+.post-footer-notes h4 {
+    color: var(--secondary);
+    margin-bottom: 15px;
+    font-family: var(--font-mono);
+}
+
+.post-footer-notes ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.post-footer-notes li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.post-footer-notes li:before {
+    content: ">";
+    color: var(--primary);
+    position: absolute;
+    left: 0;
+}
+/* === NOVOS ESTILOS PARA O WIDGET DE LLM === */
+
+/* Estado de carregamento */
+.loading {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* Mensagem de erro */
+.error-message {
+    padding: 15px;
+    background: rgba(255, 85, 85, 0.1);
+    border-left: 3px solid #ff5555;
+    color: #ff9999;
+    font-size: 0.85rem;
+    margin: 10px 0;
+    border-radius: 3px;
+}
+
+/* Botão pequeno */
+.terminal-btn.small {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+/* Botão desabilitado */
+.terminal-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Ícone girando no botão */
+.refreshing {
+    animation: spin 1s linear infinite;
+}
+
+/* Animação de spin para o ícone */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Melhorias nos itens do ranking */
+.llm-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #222;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+.llm-item:hover {
+    background-color: rgba(255, 107, 0, 0.05);
+}
+
+.llm-rank {
+    font-weight: bold;
+    color: var(--secondary);
+    width: 50px;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.llm-name {
+    flex-grow: 1;
+    color: var(--text-main);
+    font-weight: bold;
+    min-width: 120px;
+    margin-right: 10px;
+}
+
+.llm-meta {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    width: 100%;
+    margin-top: 4px;
+    margin-left: 50px;
+    line-height: 1.3;
+}
+
+.llm-score {
+    background: var(--primary);
+    color: #000;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    min-width: 45px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.llm-trending {
+    font-size: 0.9rem;
+    margin-left: 10px;
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+}
+
+/* Cores para as tendências */
+.trend-up {
+    color: #4CAF50;
+}
+
+.trend-down {
+    color: #ff5555;
+}
+
+.trend-stable {
+    color: var(--text-dim);
+}
+
+/* Tooltip para descrição */
+.llm-item:hover .llm-trending::after {
+    content: attr(data-description);
+    position: absolute;
+    bottom: 100%;
+    left: 50px;
+    transform: translateX(-50%);
+    background: #000;
+    color: var(--text-main);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    width: 250px;
+    z-index: 1000;
+    border: 1px solid var(--primary);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    display: block;
+}
+
+/* Estilos específicos para Hugging Face */
+.api-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.75rem;
+}
+
+.refreshing {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+    margin-right: 5px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.llm-item .download-count {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+}
+
+.llm-item:hover .download-count {
+    color: var(--secondary);
+}
+
+/* Badge Hugging Face */
+.hf-badge {
+    background: linear-gradient(135deg, #ffd21e, #ff6b00);
+    color: #000;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 5px;
+}
+.api-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.75rem;
+}
+
+.refreshing {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+    margin-right: 5px;
+}
+
+.terminal-btn .icon {
+    margin-right: 5px;
+}
+
+.terminal-btn.small {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    margin-top: 8px;
+}
+
+/* Estilos para as tendências */
+.trend-up { color: #4CAF50; }
+.trend-down { color: #ff5555; }
+.trend-stable { color: var(--text-dim); }
+
+/* Ajuste no llm-trending para tooltip */
+.llm-trending {
+    font-size: 0.9rem;
+    margin-left: 10px;
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    cursor: help;
+    position: relative;
+}
+
+/* Tooltip melhorado */
+.llm-trending:hover::after {
+    content: attr(data-description);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: var(--text-main);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    width: 250px;
+    z-index: 1000;
+    border: 1px solid var(--primary);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    white-space: normal;
+}
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+.terminal-list li {
+    margin-bottom: 12px;
+    line-height: 1.3;
+    font-size: 0.85rem;
+}
+
+.terminal-list a {
+    text-decoration: none;
+    color: var(--text-main);
+    transition: color 0.2s;
+    display: block; /* Para o link cobrir o título todo */
+}
+
+.terminal-list a:hover {
+    color: var(--secondary); /* Azul ciano do seu tema */
+}
+
+.news-meta {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+    font-family: var(--font-mono);
+}
+
+.news-source {
+    color: var(--primary); /* Laranja do tema */
+    font-weight: bold;
+}
+
+.nasa-image-container {
+    margin: 10px 0;
+    border: 1px solid #333;
+    padding: 3px;
+    background: #000;
+    position: relative;
+    /* Efeito sutil de "scanline" sobre a imagem */
+    background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+}
+
+.nasa-image-container img, 
+.nasa-image-container iframe {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* Filtro para parecer uma tela CRT antiga */
+    filter: contrast(1.1) sepia(0.1) hue-rotate(350deg);
+    aspect-ratio: 16 / 9; /* Mantém formato wide */
+}
+
+.nasa-title {
+    color: var(--secondary); /* Ciano do tema */
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+#toggle-explanation-btn {
+    background: none;
+    border: 1px solid var(--text-dim);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    margin-top: 8px;
+}
+
+#toggle-explanation-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* TICKER / FAIXA DE DADOS */
+.ticker-wrap {
+    width: 100%;
+    background-color: #000;
+    border-bottom: 1px solid #333;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    z-index: 100;
+}
+
+.ticker-heading {
+    background: var(--primary); /* Laranja */
+    color: #000;
+    padding: 0 15px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.8);
+}
+
+.ticker {
+    display: inline-block;
+    padding-left: 100%; /* Começa fora da tela */
+    animation: ticker-scroll 30s linear infinite;
+}
+
+.ticker-item {
+    display: inline-block;
+    padding: 0 30px;
+    color: var(--text-main);
+}
+
+.ticker-item .value {
+    color: var(--secondary); /* Ciano */
+    font-weight: bold;
+}
+
+.ticker-item .down { color: #ff5555; }
+.ticker-item .up { color: #4CAF50; }
+
+@keyframes ticker-scroll {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+}
+
+/* Pausa a animação quando passa o mouse para ler */
+.ticker-wrap:hover .ticker {
+    animation-play-state: paused;
+}
+/* Estilo do Link no Ticker */
+.glowing-link {
+    color: var(--secondary); /* Ciano */
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid var(--secondary);
+    padding: 2px 8px;
+    background: rgba(0, 243, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.glowing-link:hover {
+    background: var(--secondary);
+    color: #000;
+    box-shadow: 0 0 15px var(--secondary);
+}
+
+/* =========================================
+   ATUALIZAÇÕES BLOG 1.0 (Novos Estilos)
+   ========================================= */
+
+/* 1. Botão Charts no Menu (Estilo Terminal) */
+.nav-link-charts {
+    color: var(--secondary) !important;
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    padding: 5px 12px;
+    border-radius: 4px;
+    background: rgba(0, 243, 255, 0.05);
+    font-size: 0.85rem;
+    font-family: 'Space Mono', monospace;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-link-charts:hover {
+    background: var(--secondary);
+    color: #000 !important;
+    box-shadow: 0 0 12px var(--secondary);
+    border-color: var(--secondary);
+}
+
+/* 2. Novo Layout do Rodapé */
+.footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+    align-items: start;
+    padding-bottom: 20px;
+}
+
+/* 3. Seção do Autor (Rodapé Central) */
+.footer-author {
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+    padding: 0 25px;
+}
+.footer-author p {
+    font-size: 0.85rem;
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+.author-link {
+    font-family: var(--font-logo);
+    color: var(--primary);
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-block;
+}
+.author-link:hover {
+    text-shadow: 0 0 8px var(--primary);
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+/* 4. Ícones Sociais Limpos */
+.social-clean ul {
+    display: flex;
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    justify-content: flex-end;
+}
+.social-clean img {
+    width: 24px;
+    height: 24px;
+    filter: invert(1) grayscale(100%) opacity(0.6); 
+    transition: 0.3s;
+}
+.social-clean a:hover img {
+    filter: invert(1) grayscale(0%) opacity(1) sepia(100%) hue-rotate(90deg) saturate(500%);
+    transform: scale(1.1);
+}
+
+/* Responsividade */
+@media (max-width: 800px) {
+    .footer-content { grid-template-columns: 1fr; text-align: center; }
+    .footer-author { border: none; border-top: 1px solid #333; border-bottom: 1px solid #333; padding: 30px 0; }
+    .social-clean ul { justify-content: center; }
+}
+
+/* =========================================
+   ATUALIZAÇÃO VISUAL: ARCHIVE LOG (Zebra Striping)
+   ========================================= */
+
+/* 1. Ajuste base dos itens da lista */
+.terminal-list li {
+    /* Remove a margem antiga para as linhas se tocarem como numa tabela */
+    margin-bottom: 0 !important;
+    
+    /* Adiciona "ar" dentro da linha para a cor preencher bem */
+    padding: 12px 15px;
+    
+    /* Uma linha fina para separar, estilo terminal antigo */
+    border-bottom: 1px solid #1a1a1a;
+    
+    /* Transição suave para o hover */
+    transition: background-color 0.2s ease;
+}
+
+/* 2. As linhas ímpares ganham um fundo levemente mais claro (Cinza muito escuro) */
+.terminal-list li:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* 3. As linhas pares ficam transparentes (Fundo preto do site) */
+.terminal-list li:nth-child(even) {
+    background-color: transparent;
+}
+
+/* 4. Efeito ao passar o mouse (Feedback visual) */
+.terminal-list li:hover {
+    background-color: rgba(0, 243, 255, 0.05); /* Um toque muito sutil de Ciano */
+    border-left: 2px solid var(--secondary); /* Marcador lateral */
+}
+
+/* 5. Garante que o link ocupe toda a área clicável */
+.terminal-list li a {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+}
+
+ul.terminal-list {
+    list-style: none; /* O comando mágico */
+    padding-left: 0;  /* Remove o espaço à esquerda onde as bolinhas ficavam */
+    margin: 0;
+}
+
+/* Remove o sublinhado e mantém a cor do texto herdeira do terminal */
+.file-link {
+    color: inherit; /* Ou use a cor do seu terminal, ex: #00ff00 */
+    text-decoration: none;
+    border-bottom: 1px dashed; /* Um sublinhado sutil fica legal */
+}
+
+/* Efeito ao passar o mouse */
+.file-link:hover {
+    background-color: #fff; /* Inverte as cores estilo terminal */
+    color: #000;
+    cursor: pointer;
+}

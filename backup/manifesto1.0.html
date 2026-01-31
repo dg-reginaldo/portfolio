@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MANIFESTO V1.0 | Terceiro Setor</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Iceberg&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/blog.css">
+
+    <style>
+        body {
+            background-color: #050505; /* Fundo ligeiramente mais escuro que o blog */
+        }
+
+        /* Header Minimalista para não distrair */
+        .manifesto-header {
+            padding: 20px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-link {
+            font-family: var(--font-mono);
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border: 1px solid var(--secondary);
+            padding: 5px 10px;
+            transition: 0.3s;
+        }
+        .back-link:hover { background: var(--secondary); color: #000; }
+
+        /* --- SEÇÃO 1: A CAPA (POSTER) --- */
+        .zine-cover {
+            position: relative;
+            width: 100%;
+            height: 85vh; /* Ocupa quase toda a altura da tela */
+            overflow: hidden;
+            border-bottom: 2px solid var(--primary);
+        }
+        /* SUBSTITUA PELO SEU POSTER REAL */
+        .zine-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(120%); /* Efeito dramático na imagem */
+            opacity: 0.6;
+        }
+        .cover-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 40px;
+            background: linear-gradient(to top, #050505, transparent);
+        }
+        .cover-title {
+            font-family: var(--font-logo);
+            font-size: clamp(3rem, 8vw, 6rem); /* Tipografia gigante responsiva */
+            color: var(--primary);
+            line-height: 1;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(255, 107, 0, 0.5);
+        }
+        .cover-subtitle {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-top: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* --- CONTAINER PRINCIPAL DA REVISTA --- */
+        .zine-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Estilos de Texto Editorial */
+        .zine-section { margin-bottom: 80px; }
+        
+        .zine-heading {
+            font-family: var(--font-logo);
+            font-size: 2.5rem;
+            color: var(--text-main);
+            border-left: 4px solid var(--secondary);
+            padding-left: 20px;
+            margin-bottom: 40px;
+        }
+
+        .lead-text {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .zine-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #ccc;
+            margin-bottom: 25px;
+        }
+
+        /* Layout de Colunas (Estilo Revista) */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        @media (max-width: 768px) { .two-columns { grid-template-columns: 1fr; } }
+
+        /* Destaques no texto */
+        .highlight { color: var(--secondary); font-weight: bold; }
+        
+        /* Citação Gigante */
+        .pull-quote {
+            font-family: var(--font-logo);
+            font-size: 2rem;
+            text-align: center;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+            padding: 40px 0;
+            margin: 60px 0;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="manifesto-header">
+        <div class="logo-text" style="font-size: 1rem;">TERCEIRO SETOR // ZINE</div>
+        <a href="blog.html" class="back-link">&lt; ../VOLTAR_AO_TERMINAL</a>
+    </header>
+
+    <main>
+        <section class="zine-cover">
+            <img src="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop" alt="Poster do Manifesto">
+            <div class="cover-overlay">
+                <h1 class="cover-title">MANIFESTO<br>SOBERANIA<br>DIGITAL_</h1>
+                <p class="cover-subtitle">// V1.0 :: PARA O TERCEIRO SETOR E ALÉM</p>
+            </div>
+        </section>
+
+        <div class="zine-container">
+            
+            <section class="zine-section">
+                <h2 class="zine-heading">// 01. O PONTO DE RUPTURA</h2>
+                
+                <p class="lead-text">
+                    Não estamos apenas usando ferramentas; estamos sendo moldados por elas. O terceiro setor, historicamente um bastião de resistência, tornou-se dependente de infraestruturas proprietárias opacas.
+                </p>
+
+                <div class="two-columns zine-text">
+                    <div>
+                        <p>A promessa da internet era a descentralização. A realidade tornou-se a <span class="highlight">feudalização digital</span>. Nossos dados, nossas redes de solidariedade e nossas narrativas estão hospedadas em servidores cujo código não podemos auditar e cujas políticas não controlamos.</p>
+                        <p>Quando a ferramenta que você usa para lutar por justiça social pertence a um conglomerado que lucra com a vigilância, sua luta já começa comprometida. É hora de retomar os meios de produção digital.</p>
+                    </div>
+                    <div>
+                        <p style="border-left: 2px solid #333; padding-left: 20px; font-style: italic; color: #999;">
+                            "A dependência tecnológica é a nova forma de colonialismo. Se não controlamos o código, não controlamos nosso destino."
+                        </p>
+                        <p>Este manifesto não é um pedido de desculpas; é um plano de ação. É um chamado para hackers, ativistas, artistas e organizadores comunitários reconhecerem que o código é político.</p>
+                    </div>
+                </div>
+            </section>
+
+            <blockquote class="pull-quote">
+                "A INFORMAÇÃO QUER SER LIVRE. A INFRAESTRUTURA DEVE SER NOSSA."
+            </blockquote>
+
+            <section class="zine-section">
+                <h2 class="zine-heading">// 02. OS PILARES DA SOBERANIA</h2>
+                
+                <div class="two-columns zine-text" style="gap: 60px;">
+                    <div>
+                        <h3 style="color: var(--secondary); margin-bottom: 20px; font-family: var(--font-mono);">> PILAR_A: CÓDIGO ABERTO RADICAL</h3>
+                        <p>Não basta usar software livre; devemos contribuir para ele, financiá-lo e exigi-lo. O Open Source não é "grátis", é sobre liberdade. Cada linha de código proprietário em nossa stack é uma vulnerabilidade ética.</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--primary); margin-bottom: 20px; font-family: var(--font-mono);">> PILAR_B: IA COMUNITÁRIA</h3>
+                        <p>A inteligência artificial não deve ser monopólio de três empresas no Vale do Silício. Devemos treinar, auditar e hospedar nossos próprios modelos, alimentados por datasets éticos e voltados para problemas reais de nossas comunidades.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="zine-section" style="text-align: center; margin-top: 100px; border-top: 1px solid #333; padding-top: 60px;">
+                <p style="font-family: var(--font-mono); color: #666; margin-bottom: 20px;">// FIM DA TRANSMISSÃO V1.0</p>
+                <img src="assets/img/portfolio.JPG" alt="Assinatura" style="width: 80px; height: 80px; border-radius: 50%; filter: grayscale(100%); border: 2px solid var(--primary); padding: 5px;">
+                <h4 style="font-family: var(--font-logo); font-size: 1.5rem; margin-top: 20px; color: var(--text-main);">Dg.Reginaldo</h4>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        <div style="text-align:center; padding: 40px 0; border-top:1px solid #222; font-size:0.7rem; color:#444;">
+            &copy; 2025 Open Source Media. Manifesto V1.0.
+        </div>
+    </footer>
+
+</body>
+</html>

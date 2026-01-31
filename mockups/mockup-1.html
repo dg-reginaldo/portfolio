@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERCEIRO SETOR | DIGITAL ZINE DASHBOARD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul: #1A237E;
+            --laranja: #FF9800;
+            --preto: #000000;
+            --branco: #FFFFFF;
+            --grain: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--azul);
+            background-image: var(--grain);
+            color: var(--branco);
+            font-family: 'Space Mono', monospace;
+            overflow-x: hidden;
+            line-height: 1.4;
+        }
+
+        /* EFEITO DE SCANLINE */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 9999;
+            pointer-events: none;
+            background-size: 100% 4px, 3px 100%;
+        }
+
+        /* HEADER E LOGO EXTRUDADA */
+        header {
+            padding: 40px;
+            border-bottom: 8px solid var(--preto);
+            background: var(--azul);
+        }
+
+        .logo {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 5rem;
+            line-height: 0.85;
+            color: var(--azul);
+            text-transform: uppercase;
+            /* Efeito de extrusão do pôster original */
+            text-shadow: 
+                2px 2px 0px var(--laranja),
+                4px 4px 0px var(--laranja),
+                6px 6px 0px var(--laranja),
+                8px 8px 0px var(--laranja),
+                10px 10px 0px var(--laranja),
+                12px 12px 0px var(--preto);
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+        }
+
+        .sys-info {
+            background: var(--preto);
+            color: var(--laranja);
+            display: inline-block;
+            padding: 5px 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 0;
+            min-height: 100vh;
+        }
+
+        /* FEED DO BLOG (ZINE STYLE) */
+        main {
+            padding: 40px;
+            border-right: 8px solid var(--preto);
+        }
+
+        .hero-post {
+            background: var(--preto);
+            border: 4px solid var(--branco);
+            padding: 30px;
+            margin-bottom: 50px;
+            position: relative;
+            box-shadow: 15px 15px 0px var(--laranja);
+        }
+
+        .hero-post::before { /* Fita adesiva digital */
+            content: "";
+            position: absolute;
+            top: -15px; left: 50%;
+            width: 120px; height: 40px;
+            background: rgba(0,0,0,0.8);
+            transform: translateX(-50%) rotate(-2deg);
+        }
+
+        .hero-post h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--laranja);
+        }
+
+        .tag {
+            background: var(--laranja);
+            color: var(--preto);
+            padding: 2px 8px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .grid-posts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            border: 4px solid var(--preto);
+            padding: 20px;
+            background: var(--azul);
+            transition: all 0.1s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card:hover {
+            filter: invert(1);
+            transform: translate(-5px, -5px);
+            box-shadow: 10px 10px 0px var(--laranja);
+        }
+
+        .card h3 {
+            font-family: 'Archivo Black', sans-serif;
+            text-transform: uppercase;
+            font-size: 1.4rem;
+            margin-top: 10px;
+        }
+
+        /* SIDEBAR TERMINAL */
+        aside {
+            background: var(--preto);
+            padding: 20px;
+            font-size: 0.85rem;
+            color: #00FF00; /* Verde terminal clássico para contraste */
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            border-bottom: 1px solid #00FF00;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: var(--branco);
+        }
+
+        .log-entry {
+            margin-bottom: 10px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .log-entry span { color: var(--laranja); }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #00FF00;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* FOOTER */
+        footer {
+            grid-column: span 2;
+            background: var(--preto);
+            color: var(--branco);
+            padding: 20px 40px;
+            text-align: center;
+            border-top: 8px solid var(--laranja);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+            aside { display: none; }
+            .grid-posts { grid-template-columns: 1fr; }
+            .logo { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        TER<br>CEI<br>RO<br>SETOR
+    </div>
+    <div class="sys-info">
+        ESTADO: ATIVO // PROTOCOLO: OPEN_SOURCE // BUILD: 2026.01.01
+    </div>
+</header>
+
+<div class="container">
+    <main>
+        <section class="hero-post">
+            <span class="tag">MANIFESTO #001</span>
+            <h2>TECNOLOGIA É UTILIDADE PÚBLICA</h2>
+            <p>O Terceiro Setor não é apenas filantropia. É a infraestrutura privada mantida pela sociedade civil. Em um mundo digital, isso significa que o código deve ser aberto, a informação deve ser livre e as ferramentas de impacto pertencem ao povo.</p>
+            <br>
+            <p><strong>> [ LER MANIFESTO COMPLETO ]</strong></p>
+        </section>
+
+        <div class="grid-posts">
+            <article class="card">
+                <span class="tag">OPEN_SOURCE</span>
+                <p>// 21 DE MAIO</p>
+                <h3>Por que usamos Linux em projetos sociais?</h3>
+                <p>A soberania digital começa no kernel. Relato de implementação em comunidades...</p>
+            </article>
+
+            <article class="card">
+                <span class="tag">HARDWARE</span>
+                <p>// 18 DE MAIO</p>
+                <h3>Câmeras Blackmagic e o Cinema de Guerrilha</h3>
+                <p>Como equipamentos de alta performance estão democratizando a narrativa do terceiro setor.</p>
+            </article>
+
+            <article class="card">
+                <span class="tag">IA_GENERATIVA</span>
+                <p>// 15 DE MAIO</p>
+                <h3>ComfyUI: Automação visual para ONGs</h3>
+                <p>Criando identidades visuais potentes com zero custo de licença proprietária.</p>
+            </article>
+
+            <article class="card">
+                <span class="tag">REDES</span>
+                <p>// 10 DE MAIO</p>
+                <h3>Mesh Networks e Ativismo</h3>
+                <p>Como manter a comunicação quando a infraestrutura oficial falha.</p>
+            </article>
+        </div>
+    </main>
+
+    <aside>
+        <div class="terminal-header">
+            SYSTEM_LOG_V2.0
+        </div>
+        <div class="log-entry"><span>[14:32:01]</span> Inicializando nó de rede descentralizado...</div>
+        <div class="log-entry"><span>[14:32:05]</span> Sincronizando repositório /github/terceiro-setor...</div>
+        <div class="log-entry"><span>[14:33:10]</span> Novo comentário recebido em "Manifesto #001"</div>
+        <div class="log-entry"><span>[14:35:00]</span> Usuário anon_77 conectou via Tor.</div>
+        <div class="log-entry"><span>[14:40:22]</span> Backup de banco de dados concluído com sucesso.</div>
+        <div class="log-entry"><span>[15:01:45]</span> Alerta: Tentativa de acesso não autorizado bloqueada.</div>
+        <div class="log-entry">> aguardando comando<span class="cursor"></span></div>
+    </aside>
+</div>
+
+<footer>
+    TERCEIRO SETOR - PUNK ROCK OPEN SOURCE MEDIA - 2026 // SEM DIREITOS RESERVADOS (CC0)
+</footer>
+
+</body>
+</html>

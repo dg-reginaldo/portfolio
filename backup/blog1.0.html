@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERCEIRO SETOR | Open Source Media</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Iceberg&family=Rubik+Mono+One&family=Saira+Stencil+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/blog.css">
+</head>
+<body>
+
+    <div id="progress-container"><div id="progress-bar"></div></div>
+
+    <header class="header" id="main-header">
+        <div class="header-content">
+            <a href="blog.html" class="logo-text">
+                <span><br>TER<br>CEIRO</span>
+                <span>SE<br>TOR</span>
+            </a>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="charts.html" class="nav-link-charts">
+                            CHARTS
+                        </a>
+                    </li>
+                    <li><a href="#">Arquivo</a></li>
+                    <li><a href="#">Newsletter</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="ticker-wrap">
+    <div class="ticker-heading">SYSTEM_STATUS ::</div>
+    <div class="ticker">
+        <div class="ticker-item" id="ticker-nvda">
+            <span class="icon">📈</span> NVDA: <span class="value">Loading...</span>
+        </div>
+        <div class="ticker-item" id="ticker-energy">
+            <span class="icon">⚡</span> GLOBAL_ENERGY: <span class="value">460.00</span> TWh/yr
+        </div>
+        <div class="ticker-item" id="ticker-hf">
+            <span class="icon">🤗</span> OPEN_MODELS: <span class="value">Loading...</span>
+        </div>
+        <div class="ticker-item" id="ticker-arxiv">
+            <span class="icon">📜</span> NEW_PAPERS (24h): <span class="value">Loading...</span>
+        </div>
+        <div class="ticker-item" id="ticker-setm">
+            <span class="icon">⛏️</span> MATERIALS_ETF (SETM): <span class="value">Loading...</span>
+        </div>
+
+        <div class="ticker-item" id="ticker-openalex">
+            <span class="icon">🎨</span> GEN_AI_PAPERS (2026): <span class="value">Loading...</span>
+        </div>
+        <div class="ticker-item link-item">
+            <a href="charts.html" class="glowing-link">
+                [ SYSTEM_METRICS ] >> ACESSAR /CHARTS
+            </a>
+        </div>
+    </div>
+    </div>
+    <div id="wrapper">
+        <main id="container">
+
+            <div id="featured-post-container">
+            <div class="loading-state" style="padding: 40px; text-align: center; color: var(--text-dim);">
+                <span class="refreshing">↻</span> Carregando feed principal...
+            </div>
+            </div>
+
+            <div id="recent-posts-feed" style="margin-top: 60px; border-top: 1px solid #333; padding-top: 20px;">
+                <h3 style="color: var(--primary); font-family: var(--font-logo); margin-bottom: 20px;">> ./ARCHIVE_LOG</h3>
+                <ul id="posts-list-ul" class="terminal-list">
+                    </ul>
+            </div>
+
+            <div class="widget" id="nasa-widget-container">
+                <div class="widget-header">
+                    <h3><span class="prompt">$</span> ./uplink --target=NASA_APOD --daily</h3>
+                </div>
+                
+                <div id="nasa-content" class="terminal-output">
+                    <div id="nasa-loading">
+                        <span class="dim">[ESTABELECENDO CONEXÃO ORBITAL...]</span><br>
+                        <progress max="100" value="0" id="nasa-progress-bar" style="width: 50%; height: 5px;"></progress>
+                    </div>
+
+                    <div id="nasa-data" style="display: none;">
+                        <div class="nasa-image-container">
+                            </div>
+                        <div class="nasa-meta terminal-text">
+                            <div class="nasa-title"></div>
+                            <div class="nasa-date dim"></div>
+                            <button id="toggle-explanation-btn">[VER RELATÓRIO TÉCNICO]</button>
+                            <div id="nasa-explanation" class="dim" style="display:none; margin-top: 10px; font-size: 0.8rem;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <aside id="sidebar">
+            <div class="widget">
+                <h3>$ cat <a href="manifesto.html" class="file-link">manifesto.txt</a></h3></h3>
+                <p id="typewriter" style="min-height: 80px;"></p><span class="cursor">_</span>
+            </div>
+            
+            <!-- NOVO WIDGET: Ranking de LLMs Open Source -->
+            <div class="widget terminal-style" id="llm-ranking-widget">
+                <h3>$ hf-api --models --sort downloads --filter open-source</h3>
+                
+                <div id="llm-list" class="llm-list">
+                    <!-- Conteúdo será gerado por JavaScript -->
+                </div>
+                
+                <div class="widget-footer">
+                    <div class="api-info">
+                        <span style="color: var(--secondary); font-size: 0.8rem;">Fonte: Hugging Face Hub</span>
+                        <span class="update-info" id="llm-update-info">Conectando...</span>
+                    </div>
+                    <button class="terminal-btn" id="refresh-llm-btn">
+                        <span class="icon">🤗</span> Atualizar da HF
+                    </button>
+                </div>
+            </div>
+
+            <div class="widget" id="news-widget-container">
+                <div class="widget-header">
+                    <h3><span class="prompt">$</span> ./fetch_news --global</h3>
+                    <span id="news-spinner" style="display:none; font-size: 12px;">[LOADING...]</span>
+                </div>
+                <ul id="tech-news-list" class="terminal-list">
+                    <li>> <span class="dim">Inicializando stream de notícias...</span></li>
+                </ul>
+            </div>
+
+            <div class="widget">
+                <h3>COMUNIDADE_PULSE</h3>
+                <div class="pulse-item">
+                    <span class="pulse-alert">[ALERTA]</span> Novo workshop de IA em SP.
+                </div>
+                <div class="pulse-item">
+                    <span class="pulse-update">[UPDATE]</span> Repositório de dados aberto atualizado.
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            
+            <div class="footer-info">
+                <h2>TERCEIRO SETOR</h2>
+                <p>Tecnologia aberta para transformação social</p>
+            </div>
+
+            <div class="footer-author">
+                <p>
+                    O autor é filmmaker e profissional de marketing digital, investigando IA generativa como prática técnica e cultural, em diálogo com software livre, comunidade, soberania tecnológica e questões socioambientais no terceiro setor.
+                </p>
+                <a href="index.html" class="author-link">
+                    > Dg.Reginaldo <span style="animation:blink 1s infinite">_</span>
+                </a>
+            </div>
+
+            <div id="social" class="social-clean">
+                <ul>
+                    <li><a href="#" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077042.png" alt="Instagram"></a></li>
+                    <li><a href="#" target="_blank"><img src="https://about.x.com/content/dam/about-twitter/x/large-x-logo.png.twimg.2560.png" alt="Twitter"></a></li>
+                    <li><a href="#" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111432.png" alt="Github"></a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/blog.js"></script>
+</body>
+</html>

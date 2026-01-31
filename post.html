@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carregando Post...</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Iceberg&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/blog.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        /* Estilos exclusivos para a área de leitura do texto */
+        .markdown-body {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            color: var(--text-main);
+            min-height: 60vh;
+        }
+        /* Títulos dentro do post */
+        .markdown-body h1 { 
+            color: var(--primary); 
+            font-family: var(--font-logo); 
+            font-size: 2.5rem; 
+            margin-bottom: 10px; 
+            line-height: 1.2;
+        }
+        .markdown-body h2 { 
+            color: var(--secondary); 
+            margin-top: 40px; 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 10px; 
+        }
+        /* Parágrafos e Listas */
+        .markdown-body p, .markdown-body li { 
+            margin-bottom: 20px; 
+            line-height: 1.8; 
+            font-size: 1.1rem; 
+        }
+        /* Blocos de código */
+        .markdown-body pre { 
+            background: #111; 
+            padding: 20px; 
+            border: 1px solid #333; 
+            overflow-x: auto; 
+            border-radius: 4px;
+        }
+        .markdown-body code {
+            font-family: monospace;
+            color: var(--secondary);
+        }
+        /* Citações */
+        .markdown-body blockquote { 
+            border-left: 4px solid var(--primary); 
+            padding-left: 20px; 
+            color: var(--text-dim); 
+            font-style: italic; 
+            margin: 30px 0;
+        }
+        /* Botão de Voltar */
+        .back-nav {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid #333;
+            margin-top: 40px;
+        }
+        .back-btn { 
+            color: var(--text-dim); 
+            text-decoration: none; 
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            border: 1px solid #333;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover { 
+            color: var(--primary); 
+            border-color: var(--primary); 
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="blog.html" class="logo-text">TERCEIRO SETOR</a>
+            <nav>
+                <ul>
+                    <li><a href="blog.html">..cd/</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="container">
+        <article id="content" class="markdown-body">
+            <div style="text-align: center; margin-top: 50px;">
+                <span class="refreshing">↻</span> A carregar dados do arquivo...
+            </div>
+        </article>
+        
+        <div class="back-nav">
+            <a href="blog.html" class="back-btn">&lt; Voltar ao Início</a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content" style="text-align: center; padding: 20px; color: var(--text-dim); font-size: 0.8rem;">
+            Open Source Media | Leitor v1.0
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Pega o ID da URL (ex: post.html?id=ola-mundo)
+            const params = new URLSearchParams(window.location.search);
+            const postId = params.get('id'); 
+            const contentDiv = document.getElementById('content');
+
+            // 2. Se não tiver ID, mostra erro
+            if (!postId) {
+                contentDiv.innerHTML = "<h2 style='color:red'>ERRO: Nenhum post especificado na URL.</h2>";
+                return;
+            }
+
+            // 3. Busca o arquivo .md correspondente na pasta 'posts'
+            fetch(`posts/${postId}.md`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Arquivo não encontrado (404)");
+                    return response.text();
+                })
+                .then(markdown => {
+                    // 4. Converte o Markdown em HTML usando a biblioteca marked.js
+                    contentDiv.innerHTML = marked.parse(markdown);
+                    
+                    // 5. Tenta pegar a primeira linha do texto para usar como Título da Aba do navegador
+                    const firstLine = markdown.split('\n')[0].replace('#', '').trim();
+                    document.title = `${firstLine} | Terceiro Setor`;
+                })
+                .catch(error => {
+                    console.error(error);
+                    contentDiv.innerHTML = `
+                        <h2 style='color:#ff5555'>ERRO DE LEITURA</h2>
+                        <p>Não foi possível carregar o arquivo: <strong>posts/${postId}.md</strong></p>
+                        <p>Verifique se o nome do arquivo está correto na pasta /posts/.</p>
+                    `;
+                });
+        });
+    </script>
+</body>
+</html>
